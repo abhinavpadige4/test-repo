@@ -1,1 +1,1 @@
-def reverse_string(s):    return s[::-1]
+def reverse_string(s):\n    return s[::-1]\n\nprint(reverse_string("Hello World"))
