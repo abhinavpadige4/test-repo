@@ -1,1 +1,1 @@
-def fibonacci(n):\n    if n <= 0: return "Input should be a positive integer."\n    elif n == 1: return 0\n    elif n == 2: return 1\n    else: return fibonacci(n-1) + fibonacci(n-2)\n\nprint(fibonacci(10))
+def fibonacci(n):\n    if n <= 0:\n        return "Input should be a positive integer"\n    elif n == 1:\n        return 0\n    elif n == 2:\n        return 1\n    else:\n        return fibonacci(n-1) + fibonacci(n-2)
