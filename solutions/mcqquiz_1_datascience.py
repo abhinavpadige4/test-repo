@@ -1,161 +1,89 @@
 \"\"\"
-MCQ Quiz for Data Science Preparation
-Topics: Pandas, NumPy, Data Visualization, Linear Regression, Data Cleaning
-Difficulty: 2 Easy, 2 Medium, 1 Hard
+MCQ Quiz: Data Science Fundamentals
+Total Questions: 5 (2 Easy, 2 Medium, 1 Hard)
+Each question includes explanation.
 \"\"\"
+import random
 
-import sys
+# Define the questions
+questions = [
+    {
+        "question": "What is the primary purpose of the pandas library in Python?",
+        "options": [
+            "A) Building machine learning models",
+            "B) Data manipulation and analysis",
+            "C) Creating visualizations",
+            "D) Web scraping"
+        ],
+        "answer": "B",
+        "explanation": "Pandas is a powerful library for data manipulation and analysis, providing data structures like DataFrame and Series to handle structured data efficiently."
+    },
+    {
+        "question": "In a linear regression model, what does the R-squared value represent?",
+        "options": [
+            "A) The slope of the regression line",
+            "B) The proportion of variance in the dependent variable explained by the independent variables",
+            "C) The correlation coefficient",
+            "D) The mean squared error"
+        ],
+        "answer": "B",
+        "explanation": "R-squared (coefficient of determination) measures the proportion of the variance in the dependent variable that is predictable from the independent variable(s). It ranges from 0 to 1."
+    },
+    {
+        "question": "When dealing with missing data in a dataset, which technique is most appropriate for preserving the distribution of the data?",
+        "options": [
+            "A) Deleting rows with missing values",
+            "B) Filling missing values with the mean",
+            "C) Filling missing values with the median",
+            "D) Using multiple imputation"
+        ],
+        "answer": "D",
+        "explanation": "Multiple imputation creates several different plausible imputed datasets and combines results, preserving the distribution and uncertainty better than single imputation methods like mean/median."
+    },
+    {
+        "question": "Which of the following is NOT a valid step in a typical machine learning workflow?",
+        "options": [
+            "A) Feature engineering",
+            "B) Hyperparameter tuning",
+            "C) Data leakage inspection",
+            "D) Model deployment"
+        ],
+        "answer": "C",
+        "explanation": "While checking for data leakage is important, it is not a formal step in the workflow; it's part of data preparation and validation. The typical steps are: data collection, cleaning, exploration, feature engineering, model training, evaluation, and deployment."
+    },
+    {
+        "question": "In the context of time series analysis, what does the ACF (Autocorrelation Function) measure?",
+        "options": [
+            "A) The correlation between a time series and a lagged version of itself",
+            "B) The correlation between two different time series",
+            "C) The partial correlation controlling for intermediate lags",
+            "D) The forecast error variance"
+        ],
+        "answer": "A",
+        "explanation": "The autocorrelation function (ACF) measures the linear relationship between a time series' current value and its past values (lags). It helps identify patterns like seasonality and trend."
+    }
+]
 
 def run_quiz():
-    """Run the MCQ quiz and show answers at the end."""
-    mcqs = [
-        {
-            "question": "What does the pandas method `df.fillna(df.mean())` do?",
-            "options": [
-                "A) Fills missing values with the mean of each column",
-                "B) Fills missing values with the mean of the entire DataFrame",
-                "C) Drops rows with missing values",
-                "D) Replaces all values with the mean"
-            ],
-            "correct": "A",
-            "explanation": "The `df.mean()` returns a Series of column means. When used in `fillna`, it fills missing values in each column with that column's mean."
-        },
-        {
-            "question": "In NumPy, what is the result of `np.array([1, 2, 3]) @ np.array([4, 5, 6])`?",
-            "options": [
-                "A) Array([4, 10, 18])",
-                "B) 32",
-                "C) Array([5, 7, 9])",
-                "D) Error: dimensions must match"
-            ],
-            "correct": "B",
-            "explanation": "The @ operator performs matrix multiplication (dot product for 1D arrays). 1*4 + 2*5 + 3*6 = 4 + 10 + 18 = 32."
-        },
-        {
-            "question": "Which seaborn function is most appropriate for visualizing the distribution of a single continuous variable?",
-            "options": [
-                "A) sns.scatterplot",
-                "B) sns.boxplot",
-                "C) sns.histplot",
-                "D) sns.heatmap"
-            ],
-            "correct": "C",
-            "explanation": "sns.histplot (or sns.distplot in older versions) is used to plot the distribution of a single continuous variable by binning the values and counting observations per bin."
-        },
-        {
-            "question": "When implementing gradient descent for linear regression, what is the effect of a learning rate that is too high?",
-            "options": [
-                "A) Convergence to the global minimum is guaranteed but slow",
-                "B) The algorithm may diverge or oscillate around the minimum",
-                "C) The algorithm will converge faster to a better solution",
-                "D) No effect; learning rate only affects speed, not accuracy"
-            ],
-            "correct": "B",
-            "explanation": "If the learning rate is too large, the algorithm may overshoot the minimum and diverge, or oscillate around it without converging."
-        },
-        {
-            "question": "Consider a DataFrame with a column 'date' containing strings in the format 'YYYY-MM-DD'. Which code correctly converts it to datetime?",
-            "options": [
-                "A) df['date'] = pd.to_datetime(df['date'])",
-                "B) df['date'] = df['date'].astype('datetime')",
-                "C) df['date'] = pd.convert_date(df['date'])",
-                "D) df['date'] = df['date'].datetime()"
-            ],
-            "correct": "A",
-            "explanation": "pd.to_datetime() is the pandas function for converting strings or other formats to datetime objects. It understands the 'YYYY-MM-DD' format by default."
-        }
-    ]
-    
+    """Run the MCQ quiz and return the score."""
     score = 0
-    for i, mcq in enumerate(mcqs, 1):
-        print(f"Question {i}: {mcq['question']}")
-        for opt in mcq['options']:
+    random.shuffle(questions)  # Optional: shuffle for variety
+    for i, q in enumerate(questions, 1):
+        print(f"Question {i}: {q['question']}")
+        for opt in q['options']:
             print(f"  {opt}")
         user_answer = input("Your answer (A/B/C/D): ").strip().upper()
         while user_answer not in ['A', 'B', 'C', 'D']:
             user_answer = input("Invalid input. Please enter A, B, C, or D: ").strip().upper()
-        
-        if user_answer == mcq['correct']:
+        if user_answer == q['answer']:
             print("Correct!\n")
             score += 1
         else:
-            print(f"Incorrect. The correct answer is {mcq['correct']}.\n")
-    
-    print(f"Your final score: {score}/{len(mcqs)}")
-    print("\n" + "="*50)
-    print("Answer Key with Explanations:")
-    print("="*50)
-    for i, mcq in enumerate(mcqs, 1):
-        print(f"Q{i}: {mcq['question']}")
-        print(f"Correct Answer: {mcq['correct']}")
-        print(f"Explanation: {mcq['explanation']}\n")
+            print(f"Incorrect. The correct answer is {q['answer']}.\n")
+        print(f"Explanation: {q['explanation']}\n")
+        print("-" * 50)
+    print(f"Quiz completed! Your score: {score}/{len(questions)}")
+    return score
 
 if __name__ == "__main__":
-    # If an argument '--answer-key' is provided, only show the answer key
-    if len(sys.argv) > 1 and sys.argv[1] == '--answer-key':
-        mcqs = [
-            {
-                "question": "What does the pandas method `df.fillna(df.mean())` do?",
-                "options": [
-                    "A) Fills missing values with the mean of each column",
-                    "B) Fills missing values with the mean of the entire DataFrame",
-                    "C) Drops rows with missing values",
-                    "D) Replaces all values with the mean"
-                ],
-                "correct": "A",
-                "explanation": "The `df.mean()` returns a Series of column means. When used in `fillna`, it fills missing values in each column with that column's mean."
-            },
-            {
-                "question": "In NumPy, what is the result of `np.array([1, 2, 3]) @ np.array([4, 5, 6])`?",
-                "options": [
-                    "A) Array([4, 10, 18])",
-                    "B) 32",
-                    "C) Array([5, 7, 9])",
-                    "D) Error: dimensions must match"
-                ],
-                "correct": "B",
-                "explanation": "The @ operator performs matrix multiplication (dot product for 1D arrays). 1*4 + 2*5 + 3*6 = 4 + 10 + 18 = 32."
-            },
-            {
-                "question": "Which seaborn function is most appropriate for visualizing the distribution of a single continuous variable?",
-                "options": [
-                    "A) sns.scatterplot",
-                    "B) sns.boxplot",
-                    "C) sns.histplot",
-                    "D) sns.heatmap"
-                ],
-                "correct": "C",
-                "explanation": "sns.histplot (or sns.distplot in older versions) is used to plot the distribution of a single continuous variable by binning the values and counting observations per bin."
-            },
-            {
-                "question": "When implementing gradient descent for linear regression, what is the effect of a learning rate that is too high?",
-                "options": [
-                    "A) Convergence to the global minimum is guaranteed but slow",
-                    "B) The algorithm may diverge or oscillate around the minimum",
-                    "C) The algorithm will converge faster to a better solution",
-                    "D) No effect; learning rate only affects speed, not accuracy"
-                ],
-                "correct": "B",
-                "explanation": "If the learning rate is too large, the algorithm may overshoot the minimum and diverge, or oscillate around it without converging."
-            },
-            {
-                "question": "Consider a DataFrame with a column 'date' containing strings in the format 'YYYY-MM-DD'. Which code correctly converts it to datetime?",
-                "options": [
-                    "A) df['date'] = pd.to_datetime(df['date'])",
-                    "B) df['date'] = df['date'].astype('datetime')",
-                    "C) df['date'] = pd.convert_date(df['date'])",
-                    "D) df['date'] = df['date'].datetime()"
-                ],
-                "correct": "A",
-                "explanation": "pd.to_datetime() is the pandas function for converting strings or other formats to datetime objects. It understands the 'YYYY-MM-DD' format by default."
-            }
-        ]
-        print("="*50)
-        print("Answer Key with Explanations:")
-        print("="*50)
-        for i, mcq in enumerate(mcqs, 1):
-            print(f"Q{i}: {mcq['question']}")
-            print(f"Correct Answer: {mcq['correct']}")
-            print(f"Explanation: {mcq['explanation']}\n")
-    else:
-        run_quiz()
+    run_quiz()
