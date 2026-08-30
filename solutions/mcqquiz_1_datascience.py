@@ -1,72 +1,73 @@
 \"\"\"
-MCQ Quiz: Data Science Fundamentals
+MCQ Quiz for Data Science Preparation
 Total Questions: 5
-Organized by difficulty: 2 Easy, 2 Medium, 1 Hard
+Topics: Data Cleaning, Descriptive Statistics, Linear Regression, Visualization, K-Means Clustering
 Each question includes explanation.
 \"\"\"
 
-import sys
+import random
 
 def run_quiz():
     questions = [
         {
-            "question": "What is the primary purpose of the pandas library in Python?",
+            "question": "Which of the following is the correct way to check for NaN values in a list using Python's math module?",
             "options": [
-                "A) Data visualization",
-                "B) Statistical modeling",
-                "C) Data manipulation and analysis",
-                "D) Machine learning algorithms"
+                "A) math.isnan(x) works for any type x",
+                "B) math.isnan(x) only works for float values and raises TypeError for others",
+                "C) math.isnan(x) returns True for None values",
+                "D) math.isnan(x) can be used directly on a list"
+            ],
+            "correct": "B",
+            "explanation": "math.isnan() only accepts float values. Passing None or non-float types raises a TypeError. To check for NaN in a list, you must first ensure the element is a float."
+        },
+        {
+            "question": "In descriptive statistics, if a dataset has no repeating values, what is the mode?",
+            "options": [
+                "A) The mode is the mean of the dataset",
+                "B) The mode is the median of the dataset",
+                "C) There is no mode",
+                "D) The mode is the smallest value"
             ],
             "correct": "C",
-            "explanation": "Pandas is a powerful library for data manipulation and analysis. It provides data structures like DataFrame and Series that make it easy to clean, transform, and analyze structured data. While it can be used in conjunction with visualization and modeling libraries, its core strength is data handling."
+            "explanation": "The mode is the value that appears most frequently. If no value repeats (all frequencies are 1), then there is no mode."
         },
         {
-            "question": "In a linear regression model, what does the R-squared value represent?",
+            "question": "What is the primary purpose of using a learning rate in gradient descent for linear regression?",
             "options": [
-                "A) The slope of the regression line",
-                "B) The proportion of variance in the dependent variable explained by the independent variables",
-                "C) The correlation coefficient between variables",
-                "D) The root mean square error"
+                "A) To increase the speed of convergence regardless of stability",
+                "B) To control the step size during parameter updates to avoid overshooting the minimum",
+                "C) To normalize the input features",
+                "D) To calculate the mean squared error"
             ],
             "correct": "B",
-            "explanation": "R-squared (coefficient of determination) measures the proportion of the variance in the dependent variable that is predictable from the independent variables. It ranges from 0 to 1, where higher values indicate better fit. It does not represent slope, correlation, or error directly."
+            "explanation": "The learning rate determines how large a step we take in the direction of the negative gradient. Too large can cause divergence; too small can make convergence slow."
         },
         {
-            "question": "Which of the following is NOT a common technique for handling missing data?",
+            "question": "When saving a matplotlib figure using fig.savefig('plot.png'), which backend setting is recommended to avoid GUI-related errors in non-interactive environments?",
             "options": [
-                "A) Deletion of rows with missing values",
-                "B) Imputation with mean/median/mode",
-                "C) Using models that support missing values",
-                "D) Ignoring the missing values and proceeding with analysis"
+                "A) matplotlib.use('TkAgg')",
+                "B) matplotlib.use('Agg')",
+                "C) matplotlib.use('Qt5Agg')",
+                "D) No backend setting is needed"
             ],
-            "correct": "D",
-            "explanation": "Ignoring missing values without any treatment can lead to biased results and incorrect conclusions. Proper handling includes deletion (if appropriate), imputation, or using algorithms that can handle missingness. Simply proceeding as if data is complete is not a valid technique."
+            "correct": "B",
+            "explanation": "The 'Agg' backend is a non-interactive backend that can write files to disk but cannot display plots. It is suitable for scripts and servers where no GUI is available."
         },
         {
-            "question": "What is the main difference between supervised and unsupervised learning?",
+            "question": "In K-Means clustering, what does the inertia metric represent?",
             "options": [
-                "A) Supervised learning uses labeled data, while unsupervised learning uses unlabeled data",
-                "B) Supervised learning is for classification, unsupervised for clustering",
-                "C) Supervised learning requires more data than unsupervised learning",
-                "D) There is no difference; the terms are interchangeable"
-            ],
-            "correct": "A",
-            "explanation": "The key distinction is that supervised learning algorithms learn from labeled training data (input-output pairs), while unsupervised learning algorithms find patterns in unlabeled data. While supervised learning is often used for classification/regression and unsupervised for clustering/dimensionality reduction, the fundamental difference lies in the presence of labels."
-        },
-        {
-            "question": "In the context of K-Means clustering, what does the 'inertia' measure?",
-            "options": [
-                "A) The number of clusters formed",
+                "A) The number of iterations until convergence",
                 "B) The sum of squared distances of samples to their closest cluster center",
                 "C) The silhouette score of the clustering",
-                "D) The computational time required for clustering"
+                "D) The number of clusters formed"
             ],
             "correct": "B",
-            "explanation": "Inertia (also called within-cluster sum of squares) measures how well the data points were clustered: it is the sum of squared distances between each point and its assigned cluster centroid. Lower inertia indicates denser clusters. It is used in the elbow method to help choose the number of clusters."
+            "explanation": "Inertia, also known as within-cluster sum of squares, measures how internally coherent the clusters are. Lower inertia indicates tighter clusters."
         }
     ]
 
     score = 0
+    random.shuffle(questions)  # Optional: shuffle for variety
     for i, q in enumerate(questions, 1):
         print(f"Question {i}: {q['question']}")
         for opt in q['options']:
@@ -74,22 +75,16 @@ def run_quiz():
         user_answer = input("Your answer (A/B/C/D): ").strip().upper()
         while user_answer not in ['A', 'B', 'C', 'D']:
             user_answer = input("Invalid input. Please enter A, B, C, or D: ").strip().upper()
-        
         if user_answer == q['correct']:
             print("Correct!\n")
             score += 1
         else:
             print(f"Incorrect. The correct answer is {q['correct']}.\n")
-        
         print(f"Explanation: {q['explanation']}\n")
         print("-" * 50)
-    
-    print(f"Quiz complete! Your score: {score}/{len(questions)}")
+
+    print(f"Quiz completed! Your score: {score}/{len(questions)}")
     return score
 
 if __name__ == "__main__":
-    # If run directly, play the quiz
     run_quiz()
-else:
-    # If imported, provide the questions for testing
-    pass
