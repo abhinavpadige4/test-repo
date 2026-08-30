@@ -1,84 +1,116 @@
 \"\"\"
-Exercise 3: Simple Linear Regression from Scratch (Medium)
+Exercise 3: Linear Regression with scikit-learn (Medium)
 Problem Statement:
-Implement a simple linear regression model (y = mx + b) using gradient descent.
-Write a function `linear_regression(X, y, learning_rate=0.01, epochs=1000)` that:
-- Takes list of features X (independent variable) and target y (dependent variable)
-- Returns tuple (m, b) after training using gradient descent to minimize MSE.
-- Also return the final MSE.
+Given a dataset of house sizes (in square feet) and their corresponding prices (in thousands of dollars),
+perform a simple linear regression to predict house price based on size.
+Steps:
+1. Import necessary libraries (numpy, pandas, sklearn, matplotlib).
+2. Generate a synthetic dataset for house sizes and prices (or use a provided small dataset).
+3. Split the data into training and testing sets (80% train, 20% test).
+4. Train a linear regression model.
+5. Make predictions on the test set.
+6. Evaluate the model using Mean Squared Error (MSE) and R-squared.
+7. Plot the regression line and the data points.
 
-Assume X and y are lists of equal length, numeric.
+Expected Output:
+- Printed MSE and R-squared values.
+- A scatter plot with the regression line.
 
-Test Cases:
-1. Perfect linear data: X=[1,2,3,4,5], y=[2,4,6,8,10] -> m≈2, b≈0, MSE≈0
-2. Noisy data: X=[1,2,3,4,5], y=[2.1,3.9,6.2,8.1,9.8] -> m close to 2, b close to 0
-3. Constant y: X=[1,2,3,4,5], y=[5,5,5,5,5] -> m≈0, b≈5
+Time Complexity: O(n) for training (using normal equation or gradient descent, but sklearn's LinearRegression uses O(n_features^2 * n_samples) for normal equation, which is efficient for small n_features).
+Space Complexity: O(n_features^2) for the normal equation approach.
 \"\"\"
-def linear_regression(X, y, learning_rate=0.01, epochs=1000):
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+import matplotlib.pyplot as plt
+
+def generate_house_data(n_samples=100):
     """
-    Perform simple linear regression using gradient descent.
-    
-    Args:
-        X (list): List of feature values.
-        y (list): List of target values.
-        learning_rate (float): Step size for gradient descent.
-        epochs (int): Number of iterations.
-    
+    Generate synthetic house size and price data.
+    Price = 50 + 5 * size + noise
+    """
+    np.random.seed(42)
+    size = np.random.randint(500, 4000, n_samples)  # square feet
+    price = 50 + 5 * size + np.random.normal(0, 5000, n_samples)  # price in thousands
+    return pd.DataFrame({'size': size, 'price': price})
+
+def linear_regression_exercise(data=None):
+    """
+    Perform linear regression on house size vs price data.
+
+    Parameters:
+    data (pd.DataFrame): DataFrame with 'size' and 'price' columns. If None, generate synthetic data.
+
     Returns:
-        tuple: (m, b, final_mse) where m is slope, b is intercept.
+    tuple: (model, mse, r2, X_test, y_test, y_pred)
     """
-    n = len(X)
-    if n == 0:
-        return 0, 0, 0
-    
-    # Initialize parameters
-    m = 0.0
-    b = 0.0
-    
-    for epoch in range(epochs):
-        # Predictions
-        y_pred = [m * x + b for x in X]
-        # Errors
-        errors = [y_pred[i] - y[i] for i in range(n)]
-        # Gradients
-        dm = (2/n) * sum([errors[i] * X[i] for i in range(n)])
-        db = (2/n) * sum(errors)
-        # Update parameters
-        m -= learning_rate * dm
-        b -= learning_rate * db
-    
-    # Final MSE
-    y_pred_final = [m * x + b for x in X]
-    mse = sum([(y_pred_final[i] - y[i]) ** 2 for i in range(n)]) / n
-    
-    return m, b, mse
+    if data is None:
+        data = generate_house_data()
 
+    # Features and target
+    X = data[['size']]
+    y = data['price']
+
+    # Split the data
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # Create and train the model
+    model = LinearRegression()
+    model.fit(X_train, y_train)
+
+    # Predict
+    y_pred = model.predict(X_test)
+
+    # Evaluate
+    mse = mean_squared_error(y_test, y_pred)
+    r2 = r2_score(y_test, y_pred)
+
+    # Plot
+    plt.figure(figsize=(10, 6))
+    plt.scatter(X, y, color='blue', alpha=0.5, label='Actual data')
+    plt.scatter(X_test, y_pred, color='red', alpha=0.7, label='Predictions')
+    # Plot the regression line
+    X_line = np.linspace(X.min(), X.max(), 100).reshape(-1, 1)
+    y_line = model.predict(X_line)
+    plt.plot(X_line, y_line, color='green', linewidth=2, label='Regression line')
+    plt.xlabel('House Size (sq ft)')
+    plt.ylabel('Price (thousands $)')
+    plt.title('House Price vs Size: Linear Regression')
+    plt.legend()
+    plt.grid(True, alpha=0.3)
+    plt.show()
+
+    return model, mse, r2, X_test, y_test, y_pred
+
+# -------------------------
+# Test Cases
+# -------------------------
 if __name__ == "__main__":
-    # Test cases
-    test_cases = [
-        ([1,2,3,4,5], [2,4,6,8,10]),
-        ([1,2,3,4,5], [2.1,3.9,6.2,8.1,9.8]),
-        ([1,2,3,4,5], [5,5,5,5,5])
-    ]
-    
-    for i, (X, y) in enumerate(test_cases, 1):
-        m, b, mse = linear_regression(X, y, learning_rate=0.01, epochs=2000)
-        print(f"Test case {i}:")
-        print(f"  X = {X}")
-        print(f"  y = {y}")
-        print(f"  Learned m = {m:.4f}, b = {b:.4f}, MSE = {mse:.6f}")
-        # Simple assertions (allow tolerance)
-        if i == 1:
-            assert abs(m - 2) < 0.01 and abs(b) < 0.01 and mse < 1e-6, "Test 1 failed"
-        elif i == 2:
-            assert abs(m - 2) < 0.1 and abs(b) < 0.1, "Test 2 failed"
-        elif i == 3:
-            assert abs(m) < 0.1 and abs(b - 5) < 0.1, "Test 3 failed"
-        print("  Passed\n")
-    
-    print("All tests passed!")
-    
-    # Complexity Analysis:
-    # Time Complexity: O(epochs * n) where n is number of samples.
-    # Space Complexity: O(1) additional space (not counting input/output).
-\"\"\"
+    # Test case 1: Using synthetic data
+    model, mse, r2, X_test, y_test, y_pred = linear_regression_exercise()
+    print(f"Model Coefficient (slope): {model.coef_[0]:.2f}")
+    print(f"Model Intercept: {model.intercept_:.2f}")
+    print(f"Mean Squared Error: {mse:.2f}")
+    print(f"R-squared: {r2:.2f}")
+
+    # Assertions for sanity check
+    assert model.coef_[0] > 0, "Slope should be positive"
+    assert 0 <= r2 <= 1, "R-squared should be between 0 and 1"
+    assert mse >= 0, "MSE should be non-negative"
+
+    # Test case 2: Using a small custom dataset
+    small_data = pd.DataFrame({
+        'size': [1000, 1500, 2000, 2500, 3000],
+        'price': [150, 200, 250, 300, 350]  # Perfect linear relationship: price = 50 + 0.1*size? Actually: 1000->150, 1500->200 => slope=0.1, intercept=50
+    })
+    model2, mse2, r2_2, _, _, _ = linear_regression_exercise(small_data)
+    print("\nSmall dataset results:")
+    print(f"Slope: {model2.coef_[0]:.2f}, Intercept: {model2.intercept_:.2f}")
+    print(f"MSE: {mse2:.2f}, R-squared: {r2_2:.2f}")
+    # For perfect linear data, we expect high R-squared and low MSE
+    assert r2_2 > 0.99, "R-squared should be very high for perfect linear data"
+    assert mse2 < 1e-10, "MSE should be near zero for perfect linear data"
+
+    print("\nAll tests passed!")
