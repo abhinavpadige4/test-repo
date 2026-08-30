@@ -1,106 +1,74 @@
 \"\"\"
-Exercise 1: Basic Data Loading and Exploration with Pandas
-Topic: Pandas Basics
-Difficulty: Easy
-
+Exercise 1: Pandas Basics (Easy)
 Problem Statement:
-Write a Python script that:
-1. Loads the CSV file 'data.csv' (provided in the same directory) into a pandas DataFrame.
-2. Displays the first 5 rows.
-3. Shows the shape of the DataFrame.
-4. Lists column names and data types.
-5. Computes basic statistics (mean, median, std) for numeric columns.
-6. Handles missing values by filling them with the column mean.
-7. Saves the cleaned DataFrame to 'cleaned_data.csv'.
+Given a CSV file containing student scores in three subjects (Math, Science, English),
+write a Python script that:
+1. Loads the data into a pandas DataFrame.
+2. Calculates the average score for each student.
+3. Adds a new column 'Average' with these averages.
+4. Filters students who have an average score above 80.
+5. Saves the filtered DataFrame to a new CSV file 'top_students.csv'.
 
-Assume 'data.csv' contains a mix of numeric and categorical columns with some missing values.
+Assume the input CSV 'students.csv' has columns: StudentID, Name, Math, Science, English.
 
-Provide test cases using a small synthetic DataFrame.
-
+Provide a solution that includes reading from a string (for self-contained testing) and writing to a string.
 \"\"\"
 import pandas as pd
-import numpy as np
-import os
+import io
 
-def load_and_explore(file_path):
+def process_student_scores(csv_data: str) -> str:
     """
-    Load CSV, explore, clean missing values, and save cleaned data.
+    Process student scores CSV data and return filtered CSV as string.
     
-    Parameters:
-    file_path (str): Path to the input CSV file.
+    Args:
+        csv_data: CSV content as a string.
     
     Returns:
-    pd.DataFrame: Cleaned DataFrame.
+        CSV string of students with average > 80.
     """
     # Load data
-    df = pd.read_csv(file_path)
+    df = pd.read_csv(io.StringIO(csv_data))
     
-    # Display first 5 rows
-    print("First 5 rows:")
-    print(df.head())
-    print("\n")
+    # Calculate average
+    df['Average'] = df[['Math', 'Science', 'English']].mean(axis=1)
     
-    # Shape
-    print(f"Shape: {df.shape}")
-    print("\n")
+    # Filter
+    filtered = df[df['Average'] > 80].copy()
     
-    # Column names and data types
-    print("Column names and data types:")
-    print(df.dtypes)
-    print("\n")
-    
-    # Basic statistics for numeric columns
-    numeric_cols = df.select_dtypes(include=[np.number]).columns
-    if len(numeric_cols) > 0:
-        print("Basic statistics for numeric columns:")
-        print(df[numeric_cols].describe())
-        print("\n")
-    else:
-        print("No numeric columns found.\n")
-    
-    # Handle missing values: fill with column mean for numeric columns
-    df_cleaned = df.copy()
-    for col in numeric_cols:
-        df_cleaned[col].fillna(df_cleaned[col].mean(), inplace=True)
-    
-    # For categorical columns, fill missing with mode (optional)
-    cat_cols = df.select_dtypes(include=['object']).columns
-    for col in cat_cols:
-        df_cleaned[col].fillna(df_cleaned[col].mode()[0] if not df_cleaned[col].mode().empty else '', inplace=True)
-    
-    # Save cleaned data
-    output_path = os.path.splitext(file_path)[0] + '_cleaned.csv'
-    df_cleaned.to_csv(output_path, index=False)
-    print(f"Cleaned data saved to {output_path}")
-    
-    return df_cleaned
+    # Return as CSV string
+    output = io.StringIO()
+    filtered.to_csv(output, index=False)
+    return output.getvalue()
 
-# --------------------------
+# -------------------------
 # Test Cases
-# --------------------------
+# -------------------------
 if __name__ == "__main__":
-    # Create a synthetic CSV for testing
-    test_data = {
-        'Age': [25, 30, np.nan, 40, 35],
-        'Salary': [50000, 60000, 55000, np.nan, 65000],
-        'Department': ['HR', 'Engineering', 'Engineering', 'HR', np.nan]
-    }
-    test_df = pd.DataFrame(test_data)
-    test_file = 'test_data.csv'
-    test_df.to_csv(test_file, index=False)
+    # Test data
+    test_csv = """StudentID,Name,Math,Science,English
+1,Alice,85,90,95
+2,Bob,70,75,80
+3,Charlie,90,85,88
+4,David,60,65,70
+5,Eve,95,92,96
+"""
     
-    print("=== Running Exercise 1 Tests ===")
-    cleaned = load_and_explore(test_file)
+    result = process_student_scores(test_csv)
+    print("Filtered CSV (Average > 80):")
+    print(result)
     
-    # Verify no missing values remain
-    assert cleaned.isnull().sum().sum() == 0, "There are still missing values!"
-    # Verify shape unchanged
-    assert cleaned.shape == test_df.shape, "Shape changed after cleaning!"
-    # Verify file saved
-    assert os.path.exists('test_data_cleaned.csv'), "Cleaned file not saved!"
+    # Expected output (for verification)
+    expected_lines = [
+        "StudentID,Name,Math,Science,English,Average",
+        "1,Alice,85,90,95,90.0",
+        "3,Charlie,90,85,88,87.66666666666667",
+        "5,Eve,95,92,96,94.33333333333333"
+    ]
+    expected = "\n".join(expected_lines) + "\n"
     
-    print("\nAll tests passed!")
+    assert result == expected, "Test failed: Output does not match expected."
+    print("All tests passed!")
     
-    # Cleanup test files
-    os.remove(test_file)
-    os.remove('test_data_cleaned.csv')
+    # Complexity Analysis:
+    # Time Complexity: O(n) where n is number of rows (each row processed constant times)
+    # Space Complexity: O(n) for storing the DataFrame
