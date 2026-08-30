@@ -1,90 +1,161 @@
 \"\"\"
 MCQ Quiz for Data Science Preparation
-Total Questions: 5
-Topics: Data Cleaning, Descriptive Statistics, Linear Regression, Visualization, K-Means Clustering
-Each question includes explanation.
+Topics: Pandas, NumPy, Data Visualization, Linear Regression, Data Cleaning
+Difficulty: 2 Easy, 2 Medium, 1 Hard
 \"\"\"
 
-import random
+import sys
 
 def run_quiz():
-    questions = [
+    """Run the MCQ quiz and show answers at the end."""
+    mcqs = [
         {
-            "question": "Which of the following is the correct way to check for NaN values in a list using Python's math module?",
+            "question": "What does the pandas method `df.fillna(df.mean())` do?",
             "options": [
-                "A) math.isnan(x) works for any type x",
-                "B) math.isnan(x) only works for float values and raises TypeError for others",
-                "C) math.isnan(x) returns True for None values",
-                "D) math.isnan(x) can be used directly on a list"
+                "A) Fills missing values with the mean of each column",
+                "B) Fills missing values with the mean of the entire DataFrame",
+                "C) Drops rows with missing values",
+                "D) Replaces all values with the mean"
             ],
-            "correct": "B",
-            "explanation": "math.isnan() only accepts float values. Passing None or non-float types raises a TypeError. To check for NaN in a list, you must first ensure the element is a float."
+            "correct": "A",
+            "explanation": "The `df.mean()` returns a Series of column means. When used in `fillna`, it fills missing values in each column with that column's mean."
         },
         {
-            "question": "In descriptive statistics, if a dataset has no repeating values, what is the mode?",
+            "question": "In NumPy, what is the result of `np.array([1, 2, 3]) @ np.array([4, 5, 6])`?",
             "options": [
-                "A) The mode is the mean of the dataset",
-                "B) The mode is the median of the dataset",
-                "C) There is no mode",
-                "D) The mode is the smallest value"
+                "A) Array([4, 10, 18])",
+                "B) 32",
+                "C) Array([5, 7, 9])",
+                "D) Error: dimensions must match"
+            ],
+            "correct": "B",
+            "explanation": "The @ operator performs matrix multiplication (dot product for 1D arrays). 1*4 + 2*5 + 3*6 = 4 + 10 + 18 = 32."
+        },
+        {
+            "question": "Which seaborn function is most appropriate for visualizing the distribution of a single continuous variable?",
+            "options": [
+                "A) sns.scatterplot",
+                "B) sns.boxplot",
+                "C) sns.histplot",
+                "D) sns.heatmap"
             ],
             "correct": "C",
-            "explanation": "The mode is the value that appears most frequently. If no value repeats (all frequencies are 1), then there is no mode."
+            "explanation": "sns.histplot (or sns.distplot in older versions) is used to plot the distribution of a single continuous variable by binning the values and counting observations per bin."
         },
         {
-            "question": "What is the primary purpose of using a learning rate in gradient descent for linear regression?",
+            "question": "When implementing gradient descent for linear regression, what is the effect of a learning rate that is too high?",
             "options": [
-                "A) To increase the speed of convergence regardless of stability",
-                "B) To control the step size during parameter updates to avoid overshooting the minimum",
-                "C) To normalize the input features",
-                "D) To calculate the mean squared error"
+                "A) Convergence to the global minimum is guaranteed but slow",
+                "B) The algorithm may diverge or oscillate around the minimum",
+                "C) The algorithm will converge faster to a better solution",
+                "D) No effect; learning rate only affects speed, not accuracy"
             ],
             "correct": "B",
-            "explanation": "The learning rate determines how large a step we take in the direction of the negative gradient. Too large can cause divergence; too small can make convergence slow."
+            "explanation": "If the learning rate is too large, the algorithm may overshoot the minimum and diverge, or oscillate around it without converging."
         },
         {
-            "question": "When saving a matplotlib figure using fig.savefig('plot.png'), which backend setting is recommended to avoid GUI-related errors in non-interactive environments?",
+            "question": "Consider a DataFrame with a column 'date' containing strings in the format 'YYYY-MM-DD'. Which code correctly converts it to datetime?",
             "options": [
-                "A) matplotlib.use('TkAgg')",
-                "B) matplotlib.use('Agg')",
-                "C) matplotlib.use('Qt5Agg')",
-                "D) No backend setting is needed"
+                "A) df['date'] = pd.to_datetime(df['date'])",
+                "B) df['date'] = df['date'].astype('datetime')",
+                "C) df['date'] = pd.convert_date(df['date'])",
+                "D) df['date'] = df['date'].datetime()"
             ],
-            "correct": "B",
-            "explanation": "The 'Agg' backend is a non-interactive backend that can write files to disk but cannot display plots. It is suitable for scripts and servers where no GUI is available."
-        },
-        {
-            "question": "In K-Means clustering, what does the inertia metric represent?",
-            "options": [
-                "A) The number of iterations until convergence",
-                "B) The sum of squared distances of samples to their closest cluster center",
-                "C) The silhouette score of the clustering",
-                "D) The number of clusters formed"
-            ],
-            "correct": "B",
-            "explanation": "Inertia, also known as within-cluster sum of squares, measures how internally coherent the clusters are. Lower inertia indicates tighter clusters."
+            "correct": "A",
+            "explanation": "pd.to_datetime() is the pandas function for converting strings or other formats to datetime objects. It understands the 'YYYY-MM-DD' format by default."
         }
     ]
-
+    
     score = 0
-    random.shuffle(questions)  # Optional: shuffle for variety
-    for i, q in enumerate(questions, 1):
-        print(f"Question {i}: {q['question']}")
-        for opt in q['options']:
+    for i, mcq in enumerate(mcqs, 1):
+        print(f"Question {i}: {mcq['question']}")
+        for opt in mcq['options']:
             print(f"  {opt}")
         user_answer = input("Your answer (A/B/C/D): ").strip().upper()
         while user_answer not in ['A', 'B', 'C', 'D']:
             user_answer = input("Invalid input. Please enter A, B, C, or D: ").strip().upper()
-        if user_answer == q['correct']:
+        
+        if user_answer == mcq['correct']:
             print("Correct!\n")
             score += 1
         else:
-            print(f"Incorrect. The correct answer is {q['correct']}.\n")
-        print(f"Explanation: {q['explanation']}\n")
-        print("-" * 50)
-
-    print(f"Quiz completed! Your score: {score}/{len(questions)}")
-    return score
+            print(f"Incorrect. The correct answer is {mcq['correct']}.\n")
+    
+    print(f"Your final score: {score}/{len(mcqs)}")
+    print("\n" + "="*50)
+    print("Answer Key with Explanations:")
+    print("="*50)
+    for i, mcq in enumerate(mcqs, 1):
+        print(f"Q{i}: {mcq['question']}")
+        print(f"Correct Answer: {mcq['correct']}")
+        print(f"Explanation: {mcq['explanation']}\n")
 
 if __name__ == "__main__":
-    run_quiz()
+    # If an argument '--answer-key' is provided, only show the answer key
+    if len(sys.argv) > 1 and sys.argv[1] == '--answer-key':
+        mcqs = [
+            {
+                "question": "What does the pandas method `df.fillna(df.mean())` do?",
+                "options": [
+                    "A) Fills missing values with the mean of each column",
+                    "B) Fills missing values with the mean of the entire DataFrame",
+                    "C) Drops rows with missing values",
+                    "D) Replaces all values with the mean"
+                ],
+                "correct": "A",
+                "explanation": "The `df.mean()` returns a Series of column means. When used in `fillna`, it fills missing values in each column with that column's mean."
+            },
+            {
+                "question": "In NumPy, what is the result of `np.array([1, 2, 3]) @ np.array([4, 5, 6])`?",
+                "options": [
+                    "A) Array([4, 10, 18])",
+                    "B) 32",
+                    "C) Array([5, 7, 9])",
+                    "D) Error: dimensions must match"
+                ],
+                "correct": "B",
+                "explanation": "The @ operator performs matrix multiplication (dot product for 1D arrays). 1*4 + 2*5 + 3*6 = 4 + 10 + 18 = 32."
+            },
+            {
+                "question": "Which seaborn function is most appropriate for visualizing the distribution of a single continuous variable?",
+                "options": [
+                    "A) sns.scatterplot",
+                    "B) sns.boxplot",
+                    "C) sns.histplot",
+                    "D) sns.heatmap"
+                ],
+                "correct": "C",
+                "explanation": "sns.histplot (or sns.distplot in older versions) is used to plot the distribution of a single continuous variable by binning the values and counting observations per bin."
+            },
+            {
+                "question": "When implementing gradient descent for linear regression, what is the effect of a learning rate that is too high?",
+                "options": [
+                    "A) Convergence to the global minimum is guaranteed but slow",
+                    "B) The algorithm may diverge or oscillate around the minimum",
+                    "C) The algorithm will converge faster to a better solution",
+                    "D) No effect; learning rate only affects speed, not accuracy"
+                ],
+                "correct": "B",
+                "explanation": "If the learning rate is too large, the algorithm may overshoot the minimum and diverge, or oscillate around it without converging."
+            },
+            {
+                "question": "Consider a DataFrame with a column 'date' containing strings in the format 'YYYY-MM-DD'. Which code correctly converts it to datetime?",
+                "options": [
+                    "A) df['date'] = pd.to_datetime(df['date'])",
+                    "B) df['date'] = df['date'].astype('datetime')",
+                    "C) df['date'] = pd.convert_date(df['date'])",
+                    "D) df['date'] = df['date'].datetime()"
+                ],
+                "correct": "A",
+                "explanation": "pd.to_datetime() is the pandas function for converting strings or other formats to datetime objects. It understands the 'YYYY-MM-DD' format by default."
+            }
+        ]
+        print("="*50)
+        print("Answer Key with Explanations:")
+        print("="*50)
+        for i, mcq in enumerate(mcqs, 1):
+            print(f"Q{i}: {mcq['question']}")
+            print(f"Correct Answer: {mcq['correct']}")
+            print(f"Explanation: {mcq['explanation']}\n")
+    else:
+        run_quiz()
