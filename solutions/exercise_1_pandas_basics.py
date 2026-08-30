@@ -1,74 +1,51 @@
 \"\"\"
-Exercise 1: Pandas Basics (Easy)
+Exercise 1: Basic Pandas DataFrame Operations (Easy)
 Problem Statement:
-Given a CSV file containing student scores in three subjects (Math, Science, English),
-write a Python script that:
-1. Loads the data into a pandas DataFrame.
-2. Calculates the average score for each student.
-3. Adds a new column 'Average' with these averages.
-4. Filters students who have an average score above 80.
-5. Saves the filtered DataFrame to a new CSV file 'top_students.csv'.
+Create a DataFrame from a dictionary containing student data (name, age, grade).
+Then compute basic statistics: mean age, count of students per grade, and filter students older than 18.
 
-Assume the input CSV 'students.csv' has columns: StudentID, Name, Math, Science, English.
+Expected Output:
+- DataFrame printed
+- Mean age: X.X
+- Grade counts: ...
+- Students older than 18: (list of names)
 
-Provide a solution that includes reading from a string (for self-contained testing) and writing to a string.
+Solution:
 \"\"\"
 import pandas as pd
-import io
 
-def process_student_scores(csv_data: str) -> str:
-    """
-    Process student scores CSV data and return filtered CSV as string.
-    
-    Args:
-        csv_data: CSV content as a string.
-    
-    Returns:
-        CSV string of students with average > 80.
-    """
-    # Load data
-    df = pd.read_csv(io.StringIO(csv_data))
-    
-    # Calculate average
-    df['Average'] = df[['Math', 'Science', 'English']].mean(axis=1)
-    
-    # Filter
-    filtered = df[df['Average'] > 80].copy()
-    
-    # Return as CSV string
-    output = io.StringIO()
-    filtered.to_csv(output, index=False)
-    return output.getvalue()
+def student_dataframe():
+    data = {
+        'name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Eve'],
+        'age': [17, 19, 20, 18, 17],
+        'grade': ['A', 'B', 'A', 'C', 'B']
+    }
+    df = pd.DataFrame(data)
+    return df
 
-# -------------------------
-# Test Cases
-# -------------------------
+def analyze_students(df):
+    mean_age = df['age'].mean()
+    grade_counts = df['grade'].value_counts().to_dict()
+    older_than_18 = df[df['age'] > 18]['name'].tolist()
+    return mean_age, grade_counts, older_than_18
+
 if __name__ == "__main__":
-    # Test data
-    test_csv = """StudentID,Name,Math,Science,English
-1,Alice,85,90,95
-2,Bob,70,75,80
-3,Charlie,90,85,88
-4,David,60,65,70
-5,Eve,95,92,96
-"""
+    df = student_dataframe()
+    print("Student DataFrame:")
+    print(df)
+    print()
+    mean_age, grade_counts, older_than_18 = analyze_students(df)
+    print(f"Mean age: {mean_age:.2f}")
+    print(f"Grade counts: {grade_counts}")
+    print(f"Students older than 18: {older_than_18}")
     
-    result = process_student_scores(test_csv)
-    print("Filtered CSV (Average > 80):")
-    print(result)
-    
-    # Expected output (for verification)
-    expected_lines = [
-        "StudentID,Name,Math,Science,English,Average",
-        "1,Alice,85,90,95,90.0",
-        "3,Charlie,90,85,88,87.66666666666667",
-        "5,Eve,95,92,96,94.33333333333333"
-    ]
-    expected = "\n".join(expected_lines) + "\n"
-    
-    assert result == expected, "Test failed: Output does not match expected."
-    print("All tests passed!")
-    
-    # Complexity Analysis:
-    # Time Complexity: O(n) where n is number of rows (each row processed constant times)
-    # Space Complexity: O(n) for storing the DataFrame
+    # Simple test cases
+    assert abs(mean_age - 18.2) < 0.01, f"Expected mean age 18.2, got {mean_age}"
+    assert grade_counts == {'A': 2, 'B': 2, 'C': 1}, f"Grade counts mismatch: {grade_counts}"
+    assert older_than_18 == ['Bob', 'Charlie'], f"Older than 18 mismatch: {older_than_18}"
+    print("\nAll tests passed!")
+
+\"\"\"
+Time Complexity: O(n) for creating DataFrame and O(n) for each operation (mean, value_counts, filtering) -> overall O(n)
+Space Complexity: O(n) for storing the DataFrame.
+\"\"\"
