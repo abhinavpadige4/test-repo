@@ -2,18 +2,18 @@
     "title": "Complete Study Material Package for Data Science Preparation",
     "github_repo": "abhinavpadige4/test-repo",
     "exercises_created": [
-        {"filename": "solutions/exercise_1_pandas_basics.py", "topic": "Pandas Basics", "difficulty": "Easy", "concepts": ["pandas", "data manipulation", "filtering"]},
-        {"filename": "solutions/exercise_2_data_visualization.py", "topic": "Data Visualization", "difficulty": "Medium", "concepts": ["matplotlib", "seaborn", "plotting", "exploratory data analysis"]},
-        {"filename": "solutions/exercise_3_linear_regression.py", "topic": "Linear Regression", "difficulty": "Medium", "concepts": ["scikit-learn", "linear regression", "model training", "evaluation"]},
-        {"filename": "solutions/exercise_4_logistic_regression.py", "topic": "Logistic Regression", "difficulty": "Medium-Hard", "concepts": ["scikit-learn", "logistic regression", "classification", "metrics"]},
-        {"filename": "solutions/exercise_5_kmeans_clustering.py", "topic": "K-Means Clustering", "difficulty": "Hard", "concepts": ["clustering", "unsupervised learning", "scaling", "elbow method"]}
+        {"filename": "solutions/exercise_1_pandas_basics.py", "topic": "Pandas Basics", "difficulty": "Easy", "concepts": ["pandas", "data manipulation", "descriptive statistics"]},
+        {"filename": "solutions/exercise_2_data_cleaning.py", "topic": "Data Cleaning", "difficulty": "Easy-Medium", "concepts": ["pandas", "missing values", "data type conversion", "feature engineering"]},
+        {"filename": "solutions/exercise_3_linear_regression.py", "topic": "Linear Regression", "difficulty": "Medium", "concepts": ["scikit-learn", "linear regression", "model evaluation", "visualization"]},
+        {"filename": "solutions/exercise_4_time_series.py", "topic": "Time Series Analysis", "difficulty": "Medium", "concepts": ["pandas", "time series", "resampling", "percentage change"]},
+        {"filename": "solutions/exercise_5_titanic_model.py", "topic": "Machine Learning Pipeline", "difficulty": "Hard", "concepts": ["feature engineering", "random forest", "categorical encoding", "model evaluation"]}
     ],
     "mcqs_created": [
         {"filename": "solutions/mcqquiz_1_datascience.py", "topic": "Data Science Fundamentals", "count": 5, "difficulty_range": "Easy-Medium-Hard"}
     ],
     "projects_created": [
-        {"folder": "solutions/project_1_house_price_prediction/", "description": "Complete house price prediction pipeline with data loading, exploration, preprocessing, model training, evaluation, and prediction example"}
+        {"folder": "solutions/project_1_csv_analysis/", "description": "A complete template for a CSV data analysis project including data loading, cleaning, exploratory data analysis, and visualization."}
     ],
     "total_files_pushed": 9,
-    "concepts_covered": ["pandas", "data visualization", "linear regression", "logistic regression", "k-means clustering", "data science fundamentals", "machine learning pipeline", "model evaluation", "data preprocessing"]
+    "concepts_covered": ["pandas", "data cleaning", "linear regression", "time series", "machine learning", "feature engineering", "model evaluation", "data visualization", "exploratory data analysis"]
 }
