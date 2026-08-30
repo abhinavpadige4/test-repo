@@ -1,119 +1,113 @@
 \"\"\"
-Exercise 3: Simple Linear Regression with Scikit-learn
-Topic: Machine Learning Basics
-Difficulty: Easy
-
+Exercise 3: Linear Regression (Medium)
 Problem Statement:
-Write a Python script that:
-1. Generates a synthetic dataset for linear regression (with some noise).
-2. Splits the data into training and testing sets.
-3. Trains a linear regression model.
-4. Makes predictions on the test set.
-5. Evaluates the model using R-squared and Mean Squared Error.
-6. Plots the regression line and the data points.
+Given a dataset of house prices with features: size (sqft), bedrooms, age (years),
+and price ($), implement a simple linear regression model to predict house price
+using size as the only feature.
 
-Provide test cases to verify the model is trained and evaluated.
+Steps:
+1. Load the dataset (provided as CSV string for self-containment).
+2. Extract 'size' as X and 'price' as y.
+3. Split into train and test sets (80-20).
+4. Train a linear regression model.
+5. Evaluate using RMSE and R-squared.
+6. Print the model coefficients and evaluation metrics.
 
+Assume the CSV has columns: size, bedrooms, age, price.
 \"\"\"
+import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
+import io
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
-import os
 
-def linear_regression_exercise(n_samples=100, noise=10, test_size=0.2, random_state=42):
+def load_and_prepare_data(csv_data: str):
     """
-    Generate synthetic data, train linear regression model, evaluate, and plot.
+    Load CSV data and prepare features and target.
     
-    Parameters:
-    n_samples (int): Number of samples to generate.
-    noise (float): Standard deviation of Gaussian noise added to target.
-    test_size (float): Proportion of dataset to include in test split.
-    random_state (int): Random seed for reproducibility.
+    Args:
+        csv_data: CSV content as string.
     
     Returns:
-    dict: Contains model, metrics, and data splits.
+        X: feature array (size)
+        y: target array (price)
     """
-    # 1. Generate synthetic data
-    np.random.seed(random_state)
-    X = np.random.rand(n_samples, 1) * 10  # Features between 0 and 10
-    y = 2.5 * X.ravel() + np.random.normal(0, noise, n_samples)  # y = 2.5*x + noise
+    df = pd.read_csv(io.StringIO(csv_data))
+    X = df[['size']].values  # Using only size as feature
+    y = df['price'].values
+    return X, y
+
+def train_linear_regression(X, y, test_size=0.2, random_state=42):
+    """
+    Train linear regression model and evaluate.
     
-    # 2. Split data
+    Args:
+        X: feature array
+        y: target array
+        test_size: proportion for test set
+        random_state: seed for reproducibility
+    
+    Returns:
+        model: trained LinearRegression object
+        X_train, X_test, y_train, y_test: split data
+    """
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=test_size, random_state=random_state
     )
     
-    # 3. Train model
     model = LinearRegression()
     model.fit(X_train, y_train)
     
-    # 4. Predict
-    y_pred = model.predict(X_test)
+    # Predictions
+    y_pred_train = model.predict(X_train)
+    y_pred_test = model.predict(X_test)
     
-    # 5. Evaluate
-    mse = mean_squared_error(y_test, y_pred)
-    r2 = r2_score(y_test, y_pred)
+    # Metrics
+    train_rmse = np.sqrt(mean_squared_error(y_train, y_pred_train))
+    test_rmse = np.sqrt(mean_squared_error(y_test, y_pred_test))
+    train_r2 = r2_score(y_train, y_pred_train)
+    test_r2 = r2_score(y_test, y_pred_test)
     
-    # 6. Plot
-    plt.figure(figsize=(10, 6))
-    plt.scatter(X_train, y_train, color='blue', label='Training data', alpha=0.7)
-    plt.scatter(X_test, y_test, color='green', label='Test data', alpha=0.7)
-    # Plot regression line
-    X_line = np.linspace(X.min(), X.max(), 100).reshape(-1, 1)
-    y_line = model.predict(X_line)
-    plt.plot(X_line, y_line, color='red', linewidth=2, label='Regression line')
-    plt.xlabel('Feature X')
-    plt.ylabel('Target y')
-    plt.title('Linear Regression: Training vs Test Data')
-    plt.legend()
-    plt.grid(True, alpha=0.3)
+    print(f"Model Coefficients: slope = {model.coef_[0]:.2f}, intercept = {model.intercept_:.2f}")
+    print(f"Training RMSE: {train_rmse:.2f}, R-squared: {train_r2:.4f}")
+    print(f"Test RMSE: {test_rmse:.2f}, R-squared: {test_r2:.4f}")
     
-    # Save plot
-    plot_path = 'linear_regression_plot.png'
-    plt.savefig(plot_path)
-    plt.close()
-    print(f"Plot saved to {plot_path}")
-    
-    # Return results
-    results = {
-        'model': model,
-        'X_train': X_train, 'y_train': y_train,
-        'X_test': X_test, 'y_test': y_test,
-        'y_pred': y_pred,
-        'mse': mse,
-        'r2': r2,
-        'plot_path': plot_path
-    }
-    
-    return results
+    return model, X_train, X_test, y_train, y_test
 
-# --------------------------
+# -------------------------
 # Test Cases
-# --------------------------
+# -------------------------
 if __name__ == "__main__":
-    print("=== Running Exercise 3 Tests ===")
-    results = linear_regression_exercise()
+    # Sample house price data
+    sample_csv = """size,bedrooms,age,price
+1500,3,10,300000
+1800,4,5,350000
+1200,2,18,200000
+2000,4,8,400000
+1600,3,12,320000
+1900,4,3,380000
+1300,2,20,210000
+2100,5,2,420000
+1400,3,15,250000
+1700,3,7,330000
+"""
     
-    # Check that model is trained
-    assert hasattr(results['model'], 'coef_'), "Model not trained!"
-    assert len(results['model'].coef_) == 1, "Expected single feature model!"
+    X, y = load_and_prepare_data(sample_csv)
+    print(f"Data shape: X={X.shape}, y={y.shape}")
     
-    # Check that metrics are computed
-    assert results['mse'] >= 0, "MSE should be non-negative!"
-    assert 0 <= results['r2'] <= 1, "R-squared should be between 0 and 1!"
+    model, X_train, X_test, y_train, y_test = train_linear_regression(X, y)
     
-    # Check that plot file exists
-    assert os.path.exists(results['plot_path']), "Plot file not created!"
+    # Additional test: predict for a new size
+    new_size = np.array([[1750]])
+    predicted_price = model.predict(new_size)[0]
+    print(f"\nPredicted price for 1750 sqft house: ${predicted_price:,.2f}")
     
-    # Check data splits
-    assert len(results['X_train']) + len(results['X_test']) == 100, "Total samples mismatch!"
-    
-    print(f"Model coefficient: {results['model'].coef_[0]:.2f} (expected ~2.5)")
-    print(f"Mean Squared Error: {results['mse']:.2f}")
-    print(f"R-squared: {results['r2']:.2f}")
+    # Verify model is trained (coefficients should be reasonable)
+    assert model.coef_[0] > 0, "Price should increase with size"
+    assert model.intercept_ >= 0, "Intercept should be non-negative"
     print("\nAll tests passed!")
     
-    # Cleanup plot file
-    os.remove(results['plot_path'])
+    # Complexity Analysis:
+    # Time Complexity: O(n) for training (n samples) - linear regression via normal equation is O(n) for univariate
+    # Space Complexity: O(1) for model parameters (slope and intercept) plus O(n) for data storage
