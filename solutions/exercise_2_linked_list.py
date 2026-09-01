@@ -3,29 +3,14 @@ Exercise 2: Linked List Cycle Detection
 =======================================
 
 Problem Statement:
-Given a linked list, determine if it has a cycle in it. Return the node where the cycle begins. If there is no cycle, return None.
-
-Examples:
-Input: head = [3,2,0,-4], pos = 1
-Output: tail connects to node index 1
-
-Input: head = [1,2], pos = 0
-Output: tail connects to node index 0
-
-Input: head = [1], pos = -1
-Output: no cycle
-
-Constraints:
-- The number of nodes in the list is in the range [0, 10^4].
-- -10^5 <= Node.val <= 10^5
-- pos is -1 or a valid index in the linked-list
+Given head of a linked list, determine if the linked list has a cycle in it.
+A cycle exists if there is some node that can be reached again by following the next pointer.
 
 Approach:
 Use Floyd's Cycle Detection Algorithm (Tortoise and Hare):
-1. Use two pointers, slow and fast
-2. Move slow one step and fast two steps
-3. If they meet, there's a cycle
-4. To find the start of cycle, move one pointer to head and advance both one step until they meet
+- Use two pointers: slow (moves 1 step) and fast (moves 2 steps)
+- If there's a cycle, they will eventually meet
+- If fast reaches null, there's no cycle
 
 Time Complexity: O(n)
 Space Complexity: O(1)
@@ -36,74 +21,63 @@ class ListNode:
         self.val = val
         self.next = next
 
-def detect_cycle(head):
+def has_cycle(head):
     """
-    Detect if there is a cycle in the linked list and return the start node of cycle.
+    Detect if a linked list has a cycle.
     
     Args:
         head (ListNode): Head of the linked list
         
     Returns:
-        ListNode: Start node of cycle if exists, else None
+        bool: True if cycle exists, False otherwise
     """
     if not head or not head.next:
-        return None
+        return False
     
-    # Phase 1: Detect if cycle exists
     slow = head
     fast = head
     
+    # Move slow one step and fast two steps
     while fast and fast.next:
         slow = slow.next
         fast = fast.next.next
         
+        # If they meet, there's a cycle
         if slow == fast:
-            break
-    else:
-        # No cycle found
-        return None
+            return True
     
-    # Phase 2: Find the start of the cycle
-    slow = head
-    while slow != fast:
-        slow = slow.next
-        fast = fast.next
-    
-    return slow
+    # If fast reaches end, no cycle
+    return False
 
-# Test cases
-def test_detect_cycle():
-    # Test case 1: Cycle exists
-    # Create nodes: 3 -> 2 -> 0 -> -4 -> 2 (cycle)
-    node1 = ListNode(3)
+# Test Cases
+if __name__ == "__main__":
+    # Test Case 1: No cycle
+    # 1 -> 2 -> 3 -> None
+    node1 = ListNode(1)
     node2 = ListNode(2)
-    node3 = ListNode(0)
-    node4 = ListNode(-4)
-    
+    node3 = ListNode(3)
     node1.next = node2
     node2.next = node3
-    node3.next = node4
-    node4.next = node2  # Cycle back to node2 (index 1)
     
-    result1 = detect_cycle(node1)
-    assert result1 == node2, f"Test 1 failed: expected node with value {node2.val}, got {result1.val if result1 else None}"
+    print(f"Test 1 - Has cycle: {has_cycle(node1)}")  # Expected: False
     
-    # Test case 2: No cycle
-    node5 = ListNode(1)
-    node6 = ListNode(2)
+    # Test Case 2: Cycle exists
+    # 1 -> 2 -> 3 -> 4
+    #      ^         |
+    #      |_________|
+    node4 = ListNode(1)
+    node5 = ListNode(2)
+    node6 = ListNode(3)
+    node7 = ListNode(4)
+    node4.next = node5
     node5.next = node6
+    node6.next = node7
+    node7.next = node5  # Creates cycle
     
-    result2 = detect_cycle(node5)
-    assert result2 is None, f"Test 2 failed: expected None, got {result2}"
+    print(f"Test 2 - Has cycle: {has_cycle(node4)}")  # Expected: True
     
-    # Test case 3: Single node with cycle
-    node7 = ListNode(1)
-    node7.next = node7  # Points to itself
+    # Test Case 3: Single node with cycle
+    node8 = ListNode(1)
+    node8.next = node8  # Points to itself
     
-    result3 = detect_cycle(node7)
-    assert result3 == node7, f"Test 3 failed: expected node with value {node7.val}, got {result3.val if result3 else None}"
-    
-    print("All test cases passed!")
-
-if __name__ == "__main__":
-    test_detect_cycle()
+    print(f"Test 3 - Has cycle: {has_cycle(node8)}")  # Expected: True
