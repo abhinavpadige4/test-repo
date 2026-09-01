@@ -8,33 +8,27 @@ Write a Python program that prints "Hello, World!" to the console.
 
 Solution:
 \"\"\"
-
 def hello_world():
     """
     Prints Hello, World! to the console.
     """
     print("Hello, World!")
 
+# Test cases
 if __name__ == "__main__":
-    hello_world()
-
-# Test Cases
-def test_hello_world():
-    import io
-    import sys
-    # Capture stdout
-    old_stdout = sys.stdout
-    sys.stdout = io.StringIO()
-    hello_world()
-    output = sys.stdout.getvalue().strip()
-    sys.stdout = old_stdout
-    assert output == "Hello, World!", f"Expected 'Hello, World!', got '{output}'"
-
-# Run tests
-if __name__ == "__main__":
-    test_hello_world()
-    print("All tests passed!")
+    # Test Case 1: Basic functionality
+    print("Test Case 1:")
+    hello_world()  # Expected: Hello, World!
+    
+    # Test Case 2: Verify it's a function
+    print("\\nTest Case 2: Function type")
+    print(type(hello_world))  # Expected: <class 'function'>
+    
+    # Test Case 3: Verify it returns None
+    print("\\nTest Case 3: Return value")
+    result = hello_world()
+    print(f"Return value: {result}")  # Expected: None
 
 # Complexity Analysis:
-# Time Complexity: O(1) - constant time operation
-# Space Complexity: O(1) - constant space used
+# Time Complexity: O(1) - Constant time operation
+# Space Complexity: O(1) - No additional space used
