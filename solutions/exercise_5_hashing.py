@@ -1,84 +1,122 @@
 """
-Exercise 5: Two Sum Problem
-===========================
+Exercise 5: Group Anagrams
 
 Problem Statement:
-Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
-You may assume that each input would have exactly one solution, and you may not use the same element twice.
+Given an array of strings strs, group the anagrams together. You can return the answer in any order.
+An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
 
 Examples:
-Input: nums = [2,7,11,15], target = 9
-Output: [0,1]
-Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].
+Input: strs = ["eat","tea","tan","ate","nat","bat"]
+Output: [["bat"],["nat","tan"],["ate","eat","tea"]]
 
-Input: nums = [3,2,4], target = 6
-Output: [1,2]
+Input: strs = [""]
+Output: [[""]]
 
-Input: nums = [3,3], target = 6
-Output: [0,1]
+Input: strs = ["a"]
+Output: [["a"]]
 
 Constraints:
-- 2 <= nums.length <= 10^4
-- -10^9 <= nums[i] <= 10^9
-- -10^9 <= target <= 10^9
-- Only one valid answer exists.
-
-Approach:
-Use a hash map to store the value and its index as we iterate through the array.
-For each element, check if (target - current_element) exists in the hash map.
-If it does, we've found our pair.
-
-Time Complexity: O(n)
-Space Complexity: O(n)
+- 1 <= strs.length <= 10^4
+- 0 <= strs[i].length <= 100
+- strs[i] consists of lowercase English letters.
 """
 
-def two_sum(nums, target):
+def group_anagrams(strs):
     """
-    Find indices of two numbers that add up to target.
+    Group anagrams together using character count as the key.
+    
+    Approach:
+    1. For each string, calculate the frequency of each character
+    2. Use this frequency tuple as a key in a hash map
+    3. Group all strings with the same character frequency
     
     Args:
-        nums (List[int]): Array of integers
-        target (int): Target sum
-        
+        strs (List[str]): List of strings to group
+    
     Returns:
-        List[int]: Indices of the two numbers
+        List[List[str]]: Groups of anagrams
+    
+    Time Complexity: O(N * K) where N is number of strings and K is max length of string
+    Space Complexity: O(N * K) to store all strings in hash map
     """
-    # Hash map to store value -> index mapping
-    num_map = {}
+    anagram_groups = {}
     
-    for i, num in enumerate(nums):
-        complement = target - num
-        if complement in num_map:
-            return [num_map[complement], i]
-        num_map[num] = i
+    for s in strs:
+        # Count frequency of each character
+        char_count = [0] * 26  # For lowercase English letters
+        for char in s:
+            char_count[ord(char) - ord('a')] += 1
+        
+        # Convert to tuple so it can be used as dictionary key
+        key = tuple(char_count)
+        
+        # Add string to its anagram group
+        if key in anagram_groups:
+            anagram_groups[key].append(s)
+        else:
+            anagram_groups[key] = [s]
     
-    # This line should never be reached given the problem constraints
-    return []
+    # Return all groups
+    return list(anagram_groups.values())
 
-# Test cases
-def test_two_sum():
-    # Test case 1: Normal case
-    nums1 = [2, 7, 11, 15]
-    target1 = 9
-    expected1 = [0, 1]
-    result1 = two_sum(nums1, target1)
-    assert result1 == expected1, f"Test 1 failed: expected {expected1}, got {result1}"
+def group_anagrams_sorted(strs):
+    """
+    Group anagrams together using sorted string as the key.
     
-    # Test case 2: Not first two elements
-    nums2 = [3, 2, 4]
-    target2 = 6
-    expected2 = [1, 2]
-    result2 = two_sum(nums2, target2)
-    assert result2 == expected2, f"Test 2 failed: expected {expected2}, got {result2}"
+    Alternative approach:
+    1. For each string, sort its characters
+    2. Use the sorted string as a key in a hash map
+    3. Group all strings with the same sorted key
     
-    # Test case 3: Duplicate elements
-    nums3 = [3, 3]
-    target3 = 6
-    expected3 = [0, 1]
-    result3 = two_sum(nums3, target3)
-    assert result3 == expected3, f"Test 3 failed: expected {expected3}, got {result3}"
+    Args:
+        strs (List[str]): List of strings to group
     
-    print("All test cases passed!")
+    Returns:
+        List[List[str]]: Groups of anagrams
+    
+    Time Complexity: O(N * K * log K) where N is number of strings and K is max length of string
+    Space Complexity: O(N * K) to store all strings in hash map
+    """
+    anagram_groups = {}
+    
+    for s in strs:
+        # Sort characters to create key
+        key = ''.join(sorted(s))
+        
+        # Add string to its anagram group
+        if key in anagram_groups:
+            anagram_groups[key].append(s)
+        else:
+            anagram_groups[key] = [s]
+    
+    # Return all groups
+    return list(anagram_groups.values())
 
+# Test Cases
 if __name__ == "__main__":
-    test_two_sum()
+    # Test Case 1
+    strs1 = ["eat","tea","tan","ate","nat","bat"]
+    result1 = group_anagrams(strs1)
+    expected1 = [["bat"],["nat","tan"],["ate","eat","tea"]]  # Order may vary
+    print(f"Test 1: {strs1} => {result1}")
+    # Check that all anagram groups are present
+    assert len(result1) == 3, f"Expected 3 groups, got {len(result1)}"
+    assert set(["bat"]) in [set(group) for group in result1], "Missing 'bat' group"
+    assert set(["nat","tan"]) in [set(group) for group in result1], "Missing 'nat','tan' group"
+    assert set(["ate","eat","tea"]) in [set(group) for group in result1], "Missing 'ate','eat','tea' group"
+    
+    # Test Case 2
+    strs2 = [""]
+    result2 = group_anagrams(strs2)
+    expected2 = [[""]]
+    print(f"Test 2: {strs2} => {result2}")
+    assert result2 == expected2, f"Expected {expected2}, got {result2}"
+    
+    # Test Case 3
+    strs3 = ["a"]
+    result3 = group_anagrams(strs3)
+    expected3 = [["a"]]
+    print(f"Test 3: {strs3} => {result3}")
+    assert result3 == expected3, f"Expected {expected3}, got {result3}"
+    
+    print("All tests passed!")
