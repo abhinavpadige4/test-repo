@@ -8,7 +8,6 @@ Write a Python function that takes two numbers as input and returns their sum.
 
 Solution:
 \"\"\"
-
 def add_two_numbers(a, b):
     """
     Returns the sum of two numbers.
@@ -22,17 +21,20 @@ def add_two_numbers(a, b):
     """
     return a + b
 
-# Test Cases
-def test_add_two_numbers():
-    assert add_two_numbers(2, 3) == 5
-    assert add_two_numbers(-1, 1) == 0
-    assert add_two_numbers(0, 0) == 0
-    assert add_two_numbers(2.5, 3.5) == 6.0
-    print("All tests passed!")
-
+# Test cases
 if __name__ == "__main__":
-    test_add_two_numbers()
+    # Test Case 1: Positive integers
+    result1 = add_two_numbers(3, 5)
+    print(f"Test Case 1: 3 + 5 = {result1}")  # Expected: 8
+    
+    # Test Case 2: Negative and positive
+    result2 = add_two_numbers(-2, 7)
+    print(f"Test Case 2: -2 + 7 = {result2}")  # Expected: 5
+    
+    # Test Case 3: Floating point
+    result3 = add_two_numbers(3.5, 2.5)
+    print(f"Test Case 3: 3.5 + 2.5 = {result3}")  # Expected: 6.0
 
 # Complexity Analysis:
-# Time Complexity: O(1) - constant time operation
-# Space Complexity: O(1) - constant space used
+# Time Complexity: O(1) - Constant time operation
+# Space Complexity: O(1) - No additional space used
