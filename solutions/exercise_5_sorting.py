@@ -1,69 +1,107 @@
 """
-Exercise 5: Merge Intervals
-===========================
-
+Exercise 5: Move Zeroes (Easy)
 Problem Statement:
-Given an array of intervals where intervals[i] = [start_i, end_i],
-merge all overlapping intervals and return an array of the non-overlapping intervals.
+Given an integer array nums, move all 0's to the end of it while maintaining the relative order of the non-zero elements.
+Note that you must do this in-place without making a copy of the array.
 
-Example:
-Input: intervals = [[1,3],[2,6],[8,10],[15,18]]
-Output: [[1,6],[8,10],[15,18]]
+Examples:
+Input: nums = [0,1,0,3,12]
+Output: [1,3,12,0,0]
 
-Approach:
-1. Sort intervals by start time
-2. Iterate through sorted intervals
-3. If current interval overlaps with last merged interval, merge them
-4. Otherwise, add current interval to result
+Input: nums = [0]
+Output: [0]
 
-Time Complexity: O(n log n) due to sorting
-Space Complexity: O(n) for result array
+Constraints:
+- 1 <= nums.length <= 10^4
+- -2^31 <= nums[i] <= 2^31 - 1
+
+Follow up: Could you minimize the total number of operations done?
 """
 
-def merge_intervals(intervals):
+def move_zeroes(nums):
     """
-    Merge overlapping intervals.
+    Move all zeroes to the end of the array while maintaining the relative order of non-zero elements.
     
     Args:
-        intervals (List[List[int]]): List of intervals [start, end]
-        
+        nums (List[int]): Array of integers
+    
     Returns:
-        List[List[int]]: Merged non-overlapping intervals
-    """
-    if not intervals:
-        return []
-    
-    # Sort by start time
-    intervals.sort(key=lambda x: x[0])
-    
-    merged = [intervals[0]]
-    
-    for current in intervals[1:]:
-        last = merged[-1]
+        None: Modifies the input list in-place
         
-        # If current interval overlaps with last merged interval
-        if current[0] <= last[1]:
-            # Merge by extending end time of last interval
-            last[1] = max(last[1], current[1])
-        else:
-            # No overlap, add current interval to result
-            merged.append(current)
+    Time Complexity: O(n)
+    Space Complexity: O(1)
+    """
+    # Position pointer for non-zero elements
+    pos = 0
     
-    return merged
+    # First pass: move all non-zero elements to the front
+    for i in range(len(nums)):
+        if nums[i] != 0:
+            nums[pos] = nums[i]
+            pos += 1
+    
+    # Second pass: fill the rest with zeros
+    while pos < len(nums):
+        nums[pos] = 0
+        pos += 1
+
+# Alternative single-pass solution
+def move_zeroes_optimized(nums):
+    """
+    Optimized version that minimizes the number of operations.
+    
+    Args:
+        nums (List[int]): Array of integers
+    
+    Returns:
+        None: Modifies the input list in-place
+        
+    Time Complexity: O(n)
+    Space Complexity: O(1)
+    """
+    # Position pointer for non-zero elements
+    pos = 0
+    
+    # Single pass: swap non-zero elements to their correct positions
+    for i in range(len(nums)):
+        if nums[i] != 0:
+            nums[pos], nums[i] = nums[i], nums[pos]
+            pos += 1
 
 # Test Cases
 if __name__ == "__main__":
-    # Test Case 1: Overlapping intervals
-    intervals1 = [[1,3],[2,6],[8,10],[15,18]]
-    result1 = merge_intervals(intervals1)
-    print(f"Test 1: {intervals1} -> {result1}")  # Expected: [[1,6],[8,10],[15,18]]
+    # Test Case 1
+    nums1 = [0, 1, 0, 3, 12]
+    expected1 = [1, 3, 12, 0, 0]
+    print(f"Test 1 - Input: {nums1}")
+    move_zeroes(nums1)
+    print(f"Output: {nums1}")
+    print(f"Expected: {expected1}")
+    print(f"Pass: {nums1 == expected1}\\n")
     
-    # Test Case 2: No overlapping
-    intervals2 = [[1,4],[5,6]]
-    result2 = merge_intervals(intervals2)
-    print(f"Test 2: {intervals2} -> {result2}")  # Expected: [[1,4],[5,6]]
+    # Test Case 2
+    nums2 = [0]
+    expected2 = [0]
+    print(f"Test 2 - Input: {nums2}")
+    move_zeroes(nums2)
+    print(f"Output: {nums2}")
+    print(f"Expected: {expected2}")
+    print(f"Pass: {nums2 == expected2}\\n")
     
-    # Test Case 3: All overlapping
-    intervals3 = [[1,4],[4,5]]
-    result3 = merge_intervals(intervals3)
-    print(f"Test 3: {intervals3} -> {result3}")  # Expected: [[1,5]]
+    # Test Case 3
+    nums3 = [1, 2, 3, 4, 5]
+    expected3 = [1, 2, 3, 4, 5]
+    print(f"Test 3 - Input: {nums3}")
+    move_zeroes(nums3)
+    print(f"Output: {nums3}")
+    print(f"Expected: {expected3}")
+    print(f"Pass: {nums3 == expected3}\\n")
+    
+    # Test optimized version
+    nums4 = [0, 1, 0, 3, 12]
+    expected4 = [1, 3, 12, 0, 0]
+    print(f"Optimized Test - Input: {nums4}")
+    move_zeroes_optimized(nums4)
+    print(f"Output: {nums4}")
+    print(f"Expected: {expected4}")
+    print(f"Pass: {nums4 == expected4}\\n")
