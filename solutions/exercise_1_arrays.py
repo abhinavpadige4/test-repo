@@ -1,83 +1,82 @@
 """
-Exercise 1: Array Rotation
-==========================
-
+Exercise 1: Two Sum Problem (Easy)
 Problem Statement:
-Given an array, rotate the array to the right by k steps, where k is non-negative.
+Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
+Each input would have exactly one solution, and you may not use the same element twice.
 
-Example:
-Input: nums = [1,2,3,4,5,6,7], k = 3
-Output: [5,6,7,1,2,3,4]
+Examples:
+Input: nums = [2,7,11,15], target = 9
+Output: [0,1]
+Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].
+
+Input: nums = [3,2,4], target = 6
+Output: [1,2]
+
+Input: nums = [3,3], target = 6
+Output: [0,1]
 
 Constraints:
-- 1 <= nums.length <= 10^5
-- -2^31 <= nums[i] <= 2^31 - 1
-- 0 <= k <= 10^5
-
-Approach:
-Use the reversal algorithm for array rotation:
-1. Reverse the entire array
-2. Reverse the first k elements
-3. Reverse the remaining elements
-
-Time Complexity: O(n)
-Space Complexity: O(1)
+- 2 <= nums.length <= 10^4
+- -10^9 <= nums[i] <= 10^9
+- -10^9 <= target <= 10^9
 """
 
-def rotate_array(nums, k):
+def two_sum(nums, target):
     """
-    Rotate array to the right by k steps.
+    Find two indices in the array whose values sum to the target.
     
     Args:
-        nums (List[int]): Input array
-        k (int): Number of steps to rotate
-        
+        nums (List[int]): Array of integers
+        target (int): Target sum
+    
     Returns:
-        List[int]: Rotated array
+        List[int]: Indices of the two numbers that sum to target
+        
+    Time Complexity: O(n)
+    Space Complexity: O(n)
     """
-    if not nums or k == 0:
-        return nums
+    # Create a hash map to store value -> index mapping
+    num_map = {}
     
-    n = len(nums)
-    k = k % n  # Handle cases where k > n
+    # Iterate through the array
+    for i, num in enumerate(nums):
+        complement = target - num
+        
+        # Check if complement exists in our map
+        if complement in num_map:
+            return [num_map[complement], i]
+        
+        # Add current number and its index to map
+        num_map[num] = i
     
-    # Helper function to reverse array in place
-    def reverse(start, end):
-        while start < end:
-            nums[start], nums[end] = nums[end], nums[start]
-            start += 1
-            end -= 1
-    
-    # Step 1: Reverse entire array
-    reverse(0, n - 1)
-    
-    # Step 2: Reverse first k elements
-    reverse(0, k - 1)
-    
-    # Step 3: Reverse remaining elements
-    reverse(k, n - 1)
-    
-    return nums
+    # This should never happen according to problem constraints
+    return []
 
 # Test Cases
 if __name__ == "__main__":
     # Test Case 1
-    nums1 = [1, 2, 3, 4, 5, 6, 7]
-    k1 = 3
-    result1 = rotate_array(nums1.copy(), k1)
-    print(f"Test 1: {nums1} rotated by {k1} = {result1}")
-    # Expected: [5, 6, 7, 1, 2, 3, 4]
+    nums1 = [2, 7, 11, 15]
+    target1 = 9
+    result1 = two_sum(nums1, target1)
+    print(f"Test 1 - Input: {nums1}, Target: {target1}")
+    print(f"Output: {result1}")
+    print(f"Expected: [0, 1]")
+    print(f"Pass: {result1 == [0, 1]}\\n")
     
     # Test Case 2
-    nums2 = [-1, -100, 3, 99]
-    k2 = 2
-    result2 = rotate_array(nums2.copy(), k2)
-    print(f"Test 2: {nums2} rotated by {k2} = {result2}")
-    # Expected: [3, 99, -1, -100]
+    nums2 = [3, 2, 4]
+    target2 = 6
+    result2 = two_sum(nums2, target2)
+    print(f"Test 2 - Input: {nums2}, Target: {target2}")
+    print(f"Output: {result2}")
+    print(f"Expected: [1, 2]")
+    print(f"Pass: {result2 == [1, 2]}\\n")
     
     # Test Case 3
-    nums3 = [1]
-    k3 = 1
-    result3 = rotate_array(nums3.copy(), k3)
-    print(f"Test 3: {nums3} rotated by {k3} = {result3}")
-    # Expected: [1]
+    nums3 = [3, 3]
+    target3 = 6
+    result3 = two_sum(nums3, target3)
+    print(f"Test 3 - Input: {nums3}, Target: {target3}")
+    print(f"Output: {result3}")
+    print(f"Expected: [0, 1]")
+    print(f"Pass: {result3 == [0, 1]}\\n")
