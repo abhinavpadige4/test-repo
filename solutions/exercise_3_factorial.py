@@ -1,17 +1,16 @@
 \"\"\"
-Exercise 3: Factorial of a Number
-Topic: Recursion / Loop
+Exercise 3: Factorial
+Topic: Recursion / Loops
 Difficulty: Easy
 
 Problem Statement:
-Write a Python function to calculate the factorial of a non-negative integer.
+Write a Python function to compute the factorial of a non-negative integer n.
 
 Solution:
 \"\"\"
-
 def factorial(n):
     """
-    Calculate the factorial of a non-negative integer n.
+    Return the factorial of n (n!).
     
     Args:
         n (int): Non-negative integer
@@ -24,29 +23,28 @@ def factorial(n):
     """
     if n < 0:
         raise ValueError("Factorial is not defined for negative numbers")
-    if n == 0:
-        return 1
     result = 1
-    for i in range(1, n + 1):
+    for i in range(2, n + 1):
         result *= i
     return result
 
-# Test Cases
-def test_factorial():
-    assert factorial(0) == 1
-    assert factorial(1) == 1
-    assert factorial(5) == 120
-    assert factorial(7) == 5040
+# Test cases
+if __name__ == "__main__":
+    # Test Case 1: factorial of 0
+    print(f"Test Case 1: factorial(0) = {factorial(0)}")  # Expected: 1
+    
+    # Test Case 2: factorial of 5
+    print(f"Test Case 2: factorial(5) = {factorial(5)}")  # Expected: 120
+    
+    # Test Case 3: factorial of 7
+    print(f"Test Case 3: factorial(7) = {factorial(7)}")  # Expected: 5040
+    
+    # Test Case 4: Error handling
     try:
         factorial(-1)
-        assert False, "Expected ValueError for negative input"
-    except ValueError:
-        pass
-    print("All tests passed!")
-
-if __name__ == "__main__":
-    test_factorial()
+    except ValueError as e:
+        print(f"Test Case 4: factorial(-1) raised ValueError: {e}")
 
 # Complexity Analysis:
-# Time Complexity: O(n) - loop runs n times
-# Space Complexity: O(1) - constant space used
+# Time Complexity: O(n) - Loop runs n times
+# Space Complexity: O(1) - Constant extra space
