@@ -1,85 +1,104 @@
-\"\"\"
-Exercise 9: Binary Search
-Topic: Searching Algorithms
-Difficulty: Medium
+"""
+Exercise 9: Search in Rotated Sorted Array
+==========================================
 
 Problem Statement:
-Implement a binary search algorithm to find the index of a target value in a sorted list.
-If the target is not found, return -1.
+There is an integer array nums sorted in ascending order (with distinct values).
+Prior to being passed to your function, nums is possibly rotated at an unknown pivot index k (1 <= k < nums.length)
+such that the resulting array is [nums[k], nums[k+1], ..., nums[n-1], nums[0], nums[1], ..., nums[k-1]] (0-indexed).
+Given the array nums after the possible rotation and an integer target, return the index of target if it is in nums,
+or -1 if it is not in nums.
 
-Solution:
-\"\"\"
-def binary_search(arr, target):
+Examples:
+Input: nums = [4,5,6,7,0,1,2], target = 0
+Output: 4
+
+Input: nums = [4,5,6,7,0,1,2], target = 3
+Output: -1
+
+Input: nums = [1], target = 0
+Output: -1
+
+Constraints:
+- 1 <= nums.length <= 5000
+- -10^4 <= nums[i] <= 10^4
+- All values of nums are unique.
+- nums is an ascending array that is possibly rotated.
+- -10^4 <= target <= 10^4
+
+Approach:
+Use modified binary search:
+1. At each step, at least one half of the array is sorted
+2. Check if target lies in the sorted half
+3. If yes, search that half; otherwise, search the other half
+
+Time Complexity: O(log n)
+Space Complexity: O(1)
+"""
+
+def search_rotated_array(nums, target):
     """
-    Perform binary search on a sorted list.
+    Search for target in a rotated sorted array.
     
     Args:
-        arr: Sorted list of elements
-        target: Value to search for
+        nums (List[int]): Rotated sorted array
+        target (int): Target value to search for
         
     Returns:
-        Index of target if found, otherwise -1
+        int: Index of target if found, otherwise -1
     """
-    left, right = 0, len(arr) - 1
+    if not nums:
+        return -1
+    
+    left, right = 0, len(nums) - 1
     
     while left <= right:
         mid = (left + right) // 2
-        if arr[mid] == target:
+        
+        if nums[mid] == target:
             return mid
-        elif arr[mid] < target:
-            left = mid + 1
+        
+        # Check if left half is sorted
+        if nums[left] <= nums[mid]:
+            # Check if target is in left sorted half
+            if nums[left] <= target < nums[mid]:
+                right = mid - 1
+            else:
+                left = mid + 1
         else:
-            right = mid - 1
+            # Right half is sorted
+            # Check if target is in right sorted half
+            if nums[mid] < target <= nums[right]:
+                left = mid + 1
+            else:
+                right = mid - 1
     
     return -1
 
-def main():
-    # Test the function
-    sorted_list = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]
-    test_cases = [
-        (sorted_list, 7, 3),
-        (sorted_list, 1, 0),
-        (sorted_list, 19, 9),
-        (sorted_list, 4, -1),
-        (sorted_list, 20, -1)
-    ]
+# Test cases
+def test_search_rotated_array():
+    # Test case 1: Target exists
+    nums1 = [4, 5, 6, 7, 0, 1, 2]
+    target1 = 0
+    expected1 = 4
+    result1 = search_rotated_array(nums1, target1)
+    assert result1 == expected1, f"Test 1 failed: expected {expected1}, got {result1}"
     
-    for arr, target, expected in test_cases:
-        result = binary_search(arr, target)
-        print(f"binary_search({arr}, {target}) = {result} (expected {expected})")
-        assert result == expected, f"Failed for target {target}"
+    # Test case 2: Target doesn't exist
+    nums2 = [4, 5, 6, 7, 0, 1, 2]
+    target2 = 3
+    expected2 = -1
+    result2 = search_rotated_array(nums2, target2)
+    assert result2 == expected2, f"Test 2 failed: expected {expected2}, got {result2}"
+    
+    # Test case 3: Single element array, target doesn't exist
+    nums3 = [1]
+    target3 = 0
+    expected3 = -1
+    result3 = search_rotated_array(nums3, target3)
+    assert result3 == expected3, f"Test 3 failed: expected {expected3}, got {result3}"
+    
+    print("All test cases passed!")
 
 if __name__ == "__main__":
-    main()
-
-# Test Cases
-if __name__ == "__main__":
-    # Test Case 1: Target in middle
-    assert binary_search([1, 3, 5, 7, 9, 11], 7) == 3, "Test 1 failed"
-    print("Test Case 1 Passed: Target in middle")
-    
-    # Test Case 2: Target at beginning
-    assert binary_search([1, 3, 5, 7, 9, 11], 1) == 0, "Test 2 failed"
-    print("Test Case 2 Passed: Target at beginning")
-    
-    # Test Case 3: Target at end
-    assert binary_search([1, 3, 5, 7, 9, 11], 11) == 5, "Test 3 failed"
-    print("Test Case 3 Passed: Target at end")
-    
-    # Test Case 4: Target not present
-    assert binary_search([1, 3, 5, 7, 9, 11], 4) == -1, "Test 4 failed"
-    print("Test Case 4 Passed: Target not present")
-    
-    # Test Case 5: Empty list
-    assert binary_search([], 5) == -1, "Test 5 failed"
-    print("Test Case 5 Passed: Empty list")
-    
-    # Test Case 6: Single element, match
-    assert binary_search([5], 5) == 0, "Test 6 failed"
-    print("Test Case 6 Passed: Single element match")
-    
-    # Test Case 7: Single element, no match
-    assert binary_search([5], 3) == -1, "Test 7 failed"
-    print("Test Case 7 Passed: Single element no match")
-    
-    print("\\nAll tests passed!")
+    test_search_rotated_array()
