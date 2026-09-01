@@ -4,35 +4,37 @@ Topic: Basic Syntax
 Difficulty: Easy
 
 Problem Statement:
-Write a program that prints "Hello, World!" to the console.
+Write a Python program that prints "Hello, World!" to the console.
 
 Solution:
 \"\"\"
-def main():
+
+def hello_world():
+    """
+    Prints Hello, World! to the console.
+    """
     print("Hello, World!")
 
 if __name__ == "__main__":
-    main()
+    hello_world()
 
 # Test Cases
-if __name__ == "__main__":
-    # Test Case 1: Basic output
+def test_hello_world():
     import io
     import sys
+    # Capture stdout
     old_stdout = sys.stdout
     sys.stdout = io.StringIO()
-    main()
+    hello_world()
     output = sys.stdout.getvalue().strip()
     sys.stdout = old_stdout
     assert output == "Hello, World!", f"Expected 'Hello, World!', got '{output}'"
-    print("Test Case 1 Passed")
 
-    # Test Case 2: Ensure no extra whitespace
-    assert output == "Hello, World!", "Output should be exactly 'Hello, World!'"
-    print("Test Case 2 Passed")
+# Run tests
+if __name__ == "__main__":
+    test_hello_world()
+    print("All tests passed!")
 
-    # Test Case 3: Check length
-    assert len(output) == 13, f"Expected length 13, got {len(output)}"
-    print("Test Case 3 Passed")
-
-print("\\nAll tests passed!")
+# Complexity Analysis:
+# Time Complexity: O(1) - constant time operation
+# Space Complexity: O(1) - constant space used
