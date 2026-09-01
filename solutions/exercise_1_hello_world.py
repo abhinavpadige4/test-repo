@@ -1,34 +1,49 @@
 \"\"\"
-Exercise 1: Hello World
-Topic: Basic Syntax
+Exercise 1: Hello World with User Input
+Topic: Basics
 Difficulty: Easy
 
 Problem Statement:
-Write a Python program that prints "Hello, World!" to the console.
+Write a program that asks the user for their name and then greets them with a personalized message.
 
-Solution:
+Requirements:
+- Prompt the user to enter their name
+- Read the input from the user
+- Print a greeting message: "Hello, [name]! Welcome to Python programming!"
+- Handle empty input by assigning a default name "Guest"
+
+Example:
+Input: Alice
+Output: Hello, Alice! Welcome to Python programming!
+
+Input: (empty)
+Output: Hello, Guest! Welcome to Python programming!
 \"\"\"
-def hello_world():
-    """
-    Prints Hello, World! to the console.
-    """
-    print("Hello, World!")
 
-# Test cases
+def greet_user():
+    \"\"\"Ask for user name and return a personalized greeting.\"\"\"
+    name = input("Enter your name: ").strip()
+    if not name:
+        name = "Guest"
+    return f"Hello, {name}! Welcome to Python programming!"
+
 if __name__ == "__main__":
-    # Test Case 1: Basic functionality
-    print("Test Case 1:")
-    hello_world()  # Expected: Hello, World!
+    # Test cases
+    print("Test Case 1: Normal input")
+    # Simulate input for testing - in real scenario, use actual input
+    # We'll demonstrate with predefined values for test purposes
+    test_names = ["Alice", "", "Bob"]
+    for test_name in test_names:
+        # Temporarily replace input function for testing
+        import builtins
+        original_input = builtins.input
+        builtins.input = lambda _: test_name
+        try:
+            result = greet_user()
+            print(f"Input: '{test_name}' -> Output: {result}")
+        finally:
+            builtins.input = original_input
     
-    # Test Case 2: Verify it's a function
-    print("\\nTest Case 2: Function type")
-    print(type(hello_world))  # Expected: <class 'function'>
-    
-    # Test Case 3: Verify it returns None
-    print("\\nTest Case 3: Return value")
-    result = hello_world()
-    print(f"Return value: {result}")  # Expected: None
-
-# Complexity Analysis:
-# Time Complexity: O(1) - Constant time operation
-# Space Complexity: O(1) - No additional space used
+    # Actual interactive run (uncomment below to run interactively)
+    # print(greet_user())
+\"\"\"
