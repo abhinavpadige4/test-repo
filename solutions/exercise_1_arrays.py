@@ -1,8 +1,9 @@
-"""
-Exercise 1: Two Sum Problem (Easy)
+\"\"\"
+Exercise 1: Two Sum Problem
+
 Problem Statement:
 Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
-Each input would have exactly one solution, and you may not use the same element twice.
+You may assume that each input would have exactly one solution, and you may not use the same element twice.
 
 Examples:
 Input: nums = [2,7,11,15], target = 9
@@ -19,10 +20,13 @@ Constraints:
 - 2 <= nums.length <= 10^4
 - -10^9 <= nums[i] <= 10^9
 - -10^9 <= target <= 10^9
-"""
+- Only one valid answer exists.
+
+Follow-up: Can you come up with an algorithm that is less than O(n^2) time complexity?
+\"\"\"
 
 def two_sum(nums, target):
-    """
+    \"\"\"
     Find two indices in the array whose values sum to the target.
     
     Args:
@@ -34,49 +38,49 @@ def two_sum(nums, target):
         
     Time Complexity: O(n)
     Space Complexity: O(n)
-    """
+    \"\"\"
     # Create a hash map to store value -> index mapping
     num_map = {}
     
     # Iterate through the array
     for i, num in enumerate(nums):
+        # Calculate what number we need to find
         complement = target - num
         
-        # Check if complement exists in our map
+        # If the complement exists in our map, we found our pair
         if complement in num_map:
             return [num_map[complement], i]
         
-        # Add current number and its index to map
+        # Store the current number and its index
         num_map[num] = i
     
-    # This should never happen according to problem constraints
+    # This line should never be reached according to problem constraints
     return []
 
-# Test Cases
-if __name__ == "__main__":
-    # Test Case 1
+# Test cases
+if __name__ == \"__main__\":
+    # Test case 1
     nums1 = [2, 7, 11, 15]
     target1 = 9
     result1 = two_sum(nums1, target1)
-    print(f"Test 1 - Input: {nums1}, Target: {target1}")
-    print(f"Output: {result1}")
-    print(f"Expected: [0, 1]")
-    print(f"Pass: {result1 == [0, 1]}\\n")
+    print(f\"Test 1: nums = {nums1}, target = {target1}\")
+    print(f\"Expected: [0, 1], Got: {result1}\")
+    assert result1 == [0, 1] or result1 == [1, 0]
     
-    # Test Case 2
+    # Test case 2
     nums2 = [3, 2, 4]
     target2 = 6
     result2 = two_sum(nums2, target2)
-    print(f"Test 2 - Input: {nums2}, Target: {target2}")
-    print(f"Output: {result2}")
-    print(f"Expected: [1, 2]")
-    print(f"Pass: {result2 == [1, 2]}\\n")
+    print(f\"\\nTest 2: nums = {nums2}, target = {target2}\")
+    print(f\"Expected: [1, 2], Got: {result2}\")
+    assert result2 == [1, 2] or result2 == [2, 1]
     
-    # Test Case 3
+    # Test case 3
     nums3 = [3, 3]
     target3 = 6
     result3 = two_sum(nums3, target3)
-    print(f"Test 3 - Input: {nums3}, Target: {target3}")
-    print(f"Output: {result3}")
-    print(f"Expected: [0, 1]")
-    print(f"Pass: {result3 == [0, 1]}\\n")
+    print(f\"\\nTest 3: nums = {nums3}, target = {target3}\")
+    print(f\"Expected: [0, 1], Got: {result3}\")
+    assert result3 == [0, 1] or result3 == [1, 0]
+    
+    print(\"\\nAll tests passed!\")
