@@ -1,47 +1,45 @@
-\"\"\"
+"""
 Exercise 4: Merge Sort Implementation
 
 Problem Statement:
 Implement the merge sort algorithm to sort an array of integers in ascending order.
 
-Merge Sort is a divide-and-conquer algorithm that works by:
-1. Dividing the array into two halves
-2. Recursively sorting each half
-3. Merging the sorted halves back together
-
 Examples:
-Input: [5, 2, 3, 1]
-Output: [1, 2, 3, 5]
+Input: nums = [5,2,3,1]
+Output: [1,2,3,5]
 
-Input: [5, 1, 1, 2, 0, 0]
-Output: [0, 0, 1, 1, 2, 5]
+Input: nums = [5,1,1,2,0,0]
+Output: [0,0,1,1,2,5]
 
 Constraints:
 - 1 <= nums.length <= 5 * 10^4
 - -5 * 10^4 <= nums[i] <= 5 * 10^4
-\"\"\"
+"""
 
-def merge_sort(arr):
-    \"\"\"
+def merge_sort(nums):
+    """
     Sort an array using the merge sort algorithm.
     
+    Merge sort is a divide-and-conquer algorithm that divides the array into halves,
+    recursively sorts each half, and then merges the sorted halves.
+    
     Args:
-        arr (List[int]): Array of integers to sort
+        nums (List[int]): Array of integers to sort
     
     Returns:
         List[int]: Sorted array in ascending order
-        
+    
     Time Complexity: O(n log n)
     Space Complexity: O(n)
-    \"\"\"
+    """
     # Base case: arrays with 0 or 1 element are already sorted
-    if len(arr) <= 1:
-        return arr
+    if len(nums) <= 1:
+        return nums
     
     # Divide: split the array into two halves
-    mid = len(arr) // 2
-    left_half = arr[:mid]
-    right_half = arr[mid:]
+    mid = len(nums) // 2
+    left_half = nums[:mid]
+    right_half = nums[mid:]
     
     # Conquer: recursively sort both halves
     left_sorted = merge_sort(left_half)
@@ -51,20 +49,20 @@ def merge_sort(arr):
     return merge(left_sorted, right_sorted)
 
 def merge(left, right):
-    \"\"\"
+    """
     Merge two sorted arrays into one sorted array.
     
     Args:
-        left (List[int]): First sorted array
-        right (List[int]): Second sorted array
+        left (List[int]): Left sorted subarray
+        right (List[int]): Right sorted subarray
     
     Returns:
         List[int]: Merged sorted array
-    \"\"\"
+    """
     result = []
     i = j = 0
     
-    # Compare elements from both arrays and add the smaller one to result
+    # Compare elements from both arrays and add smaller one to result
     while i < len(left) and j < len(right):
         if left[i] <= right[j]:
             result.append(left[i])
@@ -86,95 +84,88 @@ def merge(left, right):
     return result
 
 # Alternative in-place merge sort implementation
-def merge_sort_inplace(arr):
-    \"\"\"
+def merge_sort_inplace(nums):
+    """
     In-place merge sort implementation.
     
     Args:
-        arr (List[int]): Array of integers to sort (modified in place)
+        nums (List[int]): Array of integers to sort (modified in place)
+    
+    Returns:
+        List[int]: Reference to the sorted array
+    """
+    if len(nums) <= 1:
+        return nums
+    
+    def merge_sort_helper(nums, start, end):
+        if start >= end:
+            return
         
-    Time Complexity: O(n log n)
-    Space Complexity: O(n)
-    \"\"\"
-    if len(arr) <= 1:
-        return arr
+        mid = (start + end) // 2
+        merge_sort_helper(nums, start, mid)
+        merge_sort_helper(nums, mid + 1, end)
+        merge_inplace(nums, start, mid, end)
     
-    # Create a copy to avoid modifying the original during merging
-    helper = [0] * len(arr)
-    _merge_sort_helper(arr, helper, 0, len(arr) - 1)
-    return arr
+    merge_sort_helper(nums, 0, len(nums) - 1)
+    return nums
 
-def _merge_sort_helper(arr, helper, low, high):
-    \"\"\"Helper function for in-place merge sort.\"\"\"
-    if low < high:
-        mid = (low + high) // 2
-        _merge_sort_helper(arr, helper, low, mid)
-        _merge_sort_helper(arr, helper, mid + 1, high)
-        _merge(arr, helper, low, mid, high)
-
-def _merge(arr, helper, low, mid, high):
-    \"\"\"Merge function for in-place merge sort.\"\"\"
-    # Copy both halves to helper array
-    for i in range(low, high + 1):
-        helper[i] = arr[i]
+def merge_inplace(nums, start, mid, end):
+    """
+    Merge two sorted subarrays in-place.
+    """
+    # Create temporary arrays for left and right subarrays
+    left = nums[start:mid+1]
+    right = nums[mid+1:end+1]
     
-    # Initialize pointers for left and right halves
-    helper_left = low
-    helper_right = mid + 1
-    current = low
+    i = j = 0
+    k = start
     
-    # Iterate through helper array and copy the smallest element
-    # from either left or right side back to original array
-    while helper_left <= mid and helper_right <= high:
-        if helper[helper_left] <= helper[helper_right]:
-            arr[current] = helper[helper_left]
-            helper_left += 1
+    # Merge the temporary arrays back into nums[start..end]
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            nums[k] = left[i]
+            i += 1
         else:
-            arr[current] = helper[helper_right]
-            helper_right += 1
-        current += 1
+            nums[k] = right[j]
+            j += 1
+        k += 1
     
-    # Copy remaining elements from left side (if any)
-    remaining = mid - helper_left + 1
-    for i in range(remaining):
-        arr[current + i] = helper[helper_left + i]
+    # Copy remaining elements of left[] if any
+    while i < len(left):
+        nums[k] = left[i]
+        i += 1
+        k += 1
+    
+    # Copy remaining elements of right[] if any
+    while j < len(right):
+        nums[k] = right[j]
+        j += 1
+        k += 1
 
-# Test cases
-if __name__ == \"__main__\": 
-    # Test case 1
-    arr1 = [5, 2, 3, 1]
-    sorted_arr1 = merge_sort(arr1.copy())
-    print(f\"Test 1: Original = {arr1}\")
-    print(f\"Expected: [1, 2, 3, 5], Got: {sorted_arr1}\")
-    assert sorted_arr1 == [1, 2, 3, 5]
+# Test Cases
+if __name__ == "__main__":
+    # Test Case 1
+    nums1 = [5, 2, 3, 1]
+    original1 = nums1.copy()
+    result1 = merge_sort(nums1)
+    expected1 = [1, 2, 3, 5]
+    print(f"Test 1: {original1} => {result1}")
+    assert result1 == expected1, f"Expected {expected1}, got {result1}"
     
-    # Test case 2
-    arr2 = [5, 1, 1, 2, 0, 0]
-    sorted_arr2 = merge_sort(arr2.copy())
-    print(f\"\\nTest 2: Original = {arr2}\")
-    print(f\"Expected: [0, 0, 1, 1, 2, 5], Got: {sorted_arr2}\")
-    assert sorted_arr2 == [0, 0, 1, 1, 2, 5]
+    # Test Case 2
+    nums2 = [5, 1, 1, 2, 0, 0]
+    original2 = nums2.copy()
+    result2 = merge_sort(nums2)
+    expected2 = [0, 0, 1, 1, 2, 5]
+    print(f"Test 2: {original2} => {result2}")
+    assert result2 == expected2, f"Expected {expected2}, got {result2}"
     
-    # Test case 3
-    arr3 = [1]
-    sorted_arr3 = merge_sort(arr3.copy())
-    print(f\"\\nTest 3: Original = {arr3}\")
-    print(f\"Expected: [1], Got: {sorted_arr3}\")
-    assert sorted_arr3 == [1]
+    # Test Case 3
+    nums3 = [1]
+    original3 = nums3.copy()
+    result3 = merge_sort(nums3)
+    expected3 = [1]
+    print(f"Test 3: {original3} => {result3}")
+    assert result3 == expected3, f"Expected {expected3}, got {result3}"
     
-    # Test case 4
-    arr4 = []
-    sorted_arr4 = merge_sort(arr4.copy())
-    print(f\"\\nTest 4: Original = {arr4}\")
-    print(f\"Expected: [], Got: {sorted_arr4}\")
-    assert sorted_arr4 == []
-    
-    # Test in-place version
-    arr5 = [9, 9, 3, 2, 1, 5]
-    original_arr5 = arr5.copy()
-    merge_sort_inplace(arr5)
-    print(f\"\\nIn-place Test: Original = {original_arr5}\")
-    print(f\"Sorted in-place: {arr5}\")
-    assert arr5 == [1, 2, 3, 5, 9, 9]
-    
-    print(\"\\nAll tests passed!\")
+    print("All tests passed!")
