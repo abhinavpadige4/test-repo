@@ -1,7 +1,7 @@
 \"\"\"
 Exercise 17: Min Heap Implementation
 Topic: Heap Data Structure
-Difficulty: Medium
+Difficulty: Hard
 
 Problem Statement:
 Implement a Min Heap with the following operations:
