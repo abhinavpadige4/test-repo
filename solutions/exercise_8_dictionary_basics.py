@@ -1,7 +1,7 @@
 \"\"\"
 Exercise 8: Dictionary Basics
 Topic: Dictionaries
-Difficulty: Easy
+Difficulty: Medium
 
 Problem Statement:
 Write a program that creates a dictionary to store information about a person and then allows the user to query that information.
