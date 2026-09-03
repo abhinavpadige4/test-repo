@@ -1,18 +1,28 @@
-# Day 1 Exercise: Pandas & NumPy Basics
-import pandas as pd
-import numpy as np
+# Exercise: Python Basics - Variables and Types
+# Complete the functions below.
 
-# Create a NumPy array
-data = np.array([10, 20, 30, 40, 50])
-print("NumPy Array:", data)
-print("Mean:", np.mean(data))
+def greet(name):
+    """Return a greeting string for the given name."""
+    return f"Hello, {name}!"
 
-# Create a Pandas DataFrame
-df = pd.DataFrame({
-    'Name': ['Alice', 'Bob', 'Charlie'],
-    'Age': [25, 30, 35],
-    'Score': [85, 92, 78]
-})
-print("\nDataFrame:")
-print(df)
-print("\nAverage Score:", df['Score'].mean())
+
+def add_numbers(a, b):
+    """Return the sum of two numbers."""
+    return a + b
+
+
+def describe_value(value):
+    """Return a string describing the type of the value."""
+    return f"The value is of type {type(value).__name__}"
+
+
+def is_even(number):
+    """Return True if the number is even, otherwise False."""
+    return number % 2 == 0
+
+
+if __name__ == "__main__":
+    print(greet("World"))
+    print(add_numbers(3, 5))
+    print(describe_value(42))
+    print(is_even(10))
