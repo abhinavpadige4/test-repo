@@ -1,31 +1,38 @@
-"""
-Exercise: FizzBuzz
+# Day 1: Python Basics - Variables Exercise
+# Topic: Variables and Data Types
 
-Write a function `fizzbuzz(n)` that returns a list of strings for numbers
-from 1 to n (inclusive), following these rules:
-- If the number is divisible by 3, use "Fizz".
-- If the number is divisible by 5, use "Buzz".
-- If the number is divisible by both 3 and 5, use "FizzBuzz".
-- Otherwise, use the number as a string.
+# Exercise 1: Create variables of different types
+name = "Alice"
+age = 25
+height = 5.6
+is_student = True
 
-Example:
-    fizzbuzz(5) -> ["1", "2", "Fizz", "4", "Buzz"]
-"""
+# Exercise 2: Print the variables
+print("Name:", name)
+print("Age:", age)
+print("Height:", height)
+print("Is Student:", is_student)
 
+# Exercise 3: Check data types
+print("\nData Types:")
+print("name type:", type(name))
+print("age type:", type(age))
+print("height type:", type(height))
+print("is_student type:", type(is_student))
 
-def fizzbuzz(n):
-    result = []
-    for i in range(1, n + 1):
-        if i % 15 == 0:
-            result.append("FizzBuzz")
-        elif i % 3 == 0:
-            result.append("Fizz")
-        elif i % 5 == 0:
-            result.append("Buzz")
-        else:
-            result.append(str(i))
-    return result
+# Exercise 4: Variable assignment and reassignment
+score = 95
+print("\nInitial score:", score)
+score = 98
+print("Updated score:", score)
 
+# Exercise 5: Multiple assignment
+x, y, z = 10, 20, 30
+print("\nMultiple assignment:")
+print("x =", x, "y =", y, "z =", z)
 
-if __name__ == "__main__":
-    print(fizzbuzz(15))
+# Exercise 6: Swapping values
+a, b = 5, 10
+print("\nBefore swap: a =", a, "b =", b)
+a, b = b, a
+print("After swap: a =", a, "b =", b)
